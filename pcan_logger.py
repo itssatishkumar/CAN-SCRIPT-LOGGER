@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-# pcan_logger.py
 import sys
 import time
 from collections import deque
@@ -1136,8 +1134,15 @@ if __name__ == "__main__":
     except FileNotFoundError:
         LOCAL_VERSION = "0.0.0"  # fallback if file missing
 
+    # Initialize QApplication before creating any QWidget
     app = QApplication(sys.argv)
-    # updater.check_for_update(LOCAL_VERSION, app)
+
+    # Check for updates (safe to call now)
+    updater.check_for_update(LOCAL_VERSION, app)
+
+    # Launch main application window
     window = PCANViewClone()
     window.show()
+
+    # Start the Qt event loop
     sys.exit(app.exec())
