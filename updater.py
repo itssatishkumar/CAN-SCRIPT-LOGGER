@@ -28,8 +28,13 @@ def download_file(url, target_path, parent=None):
         r.raise_for_status()
         total = int(r.headers.get("content-length", 0))
 
-        progress = QProgressDialog(f"Downloading {os.path.basename(target_path)}...", "Cancel", 0,
-                                   total if total > 0 else 0, parent)
+        progress = QProgressDialog(
+            f"Downloading {os.path.basename(target_path)}...",
+            "Cancel",
+            0,
+            total if total > 0 else 0,
+            parent
+        )
         progress.setWindowModality(Qt.ApplicationModal)
         progress.setWindowTitle("Updater")
         progress.setMinimumDuration(300)
@@ -48,6 +53,7 @@ def download_file(url, target_path, parent=None):
                     if progress.wasCanceled():
                         progress.close()
                         return False
+
         progress.close()
         return True
     except Exception as e:
@@ -65,13 +71,16 @@ def is_running_as_exe():
 # Core updater logic
 # ----------------------------
 
-def check_for_update(local_version, app,
-                     repo_user="itssatishkumar",
-                     repo_name="CAN-SCRIPT-LOGGER",
-                     updater_exe_name="updater.exe"):
+def check_for_update(
+    local_version,
+    app,
+    repo_user="itssatishkumar",
+    repo_name="CAN-SCRIPT-LOGGER",
+    updater_exe_name="updater.exe"
+):
     """
     Check GitHub for new version and update if needed.
-    Auto-downloads all .py and .txt files in repo root when version changes.
+    Auto-downloads all .py, .txt, and .dbc files in repo root when version changes.
     """
 
     parent = app.activeWindow() if app else None
@@ -136,21 +145,22 @@ def check_for_update(local_version, app,
         QMessageBox.warning(parent, "Update Failed", f"Failed to fetch file list:\n{e}")
         return
 
-    py_txt_files = [
-        f for f in files if f["name"].endswith((".py", ".txt")) and f["type"] == "file"
+    # Include .py, .txt, and .dbc files
+    valid_files = [
+        f for f in files if f["name"].endswith((".py", ".txt", ".dbc")) and f["type"] == "file"
     ]
 
-    if not py_txt_files:
-        QMessageBox.warning(parent, "Update Failed", "No .py or .txt files found in repository.")
+    if not valid_files:
+        QMessageBox.warning(parent, "Update Failed", "No .py, .txt, or .dbc files found in repository.")
         return
 
-    total_files = len(py_txt_files)
+    total_files = len(valid_files)
     overall_progress = QProgressDialog("Updating files...", "Cancel", 0, total_files, parent)
     overall_progress.setWindowTitle("Updater")
     overall_progress.setWindowModality(Qt.ApplicationModal)
     overall_progress.show()
 
-    for i, file_info in enumerate(py_txt_files, 1):
+    for i, file_info in enumerate(valid_files, 1):
         filename = file_info["name"]
         file_url = file_info["download_url"]
         local_path = os.path.join(target_folder, filename)
@@ -177,6 +187,18 @@ def check_for_update(local_version, app,
     except Exception as e:
         print(f"Failed to update local version file: {e}")
 
-    QMessageBox.information(parent, "Update Complete",
-                            "All updates installed successfully.\nPlease restart the application.")
+    QMessageBox.information(
+        parent,
+        "Update Complete",
+        "All updates installed successfully.\nPlease restart the application."
+    )
     sys.exit(0)
+
+
+# ----------------------------
+# Example usage
+# ----------------------------
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    check_for_update(local_version="1.0.1", app=app)
