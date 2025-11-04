@@ -1,9 +1,9 @@
 import os
 import sys
 import requests
+import subprocess
 from PySide6.QtWidgets import QApplication, QMessageBox, QProgressDialog
 from PySide6.QtCore import Qt
-import subprocess
 
 
 # ----------------------------
@@ -139,6 +139,10 @@ def check_for_update(local_version, app,
     py_txt_files = [
         f for f in files if f["name"].endswith((".py", ".txt")) and f["type"] == "file"
     ]
+
+    if not py_txt_files:
+        QMessageBox.warning(parent, "Update Failed", "No .py or .txt files found in repository.")
+        return
 
     total_files = len(py_txt_files)
     overall_progress = QProgressDialog("Updating files...", "Cancel", 0, total_files, parent)
