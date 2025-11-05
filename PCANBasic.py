@@ -392,7 +392,10 @@ class PCANBasic:
         #     
         if platform.system() == 'Windows':
             # Loads the API on Windows
-            self.__m_dllBasic = windll.LoadLibrary("PCANBasic")
+            import os
+            dll_path = os.path.join(os.path.dirname(__file__), "PCANBasic.dll")
+            self.__m_dllBasic = windll.LoadLibrary(dll_path)
+
         elif platform.system() == 'Linux':
             # Loads the API on Linux
             self.__m_dllBasic = cdll.LoadLibrary("libpcanbasic.so")            
