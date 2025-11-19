@@ -411,6 +411,8 @@ class PCANViewClone(QMainWindow):
         self.logging = False
         self.current_log_filename = None
         self.header_written = False
+        # ----- TEMPORARY CONNECT LOCK -----
+        self.connect_locked = True
 
         # CSV logger (parallel)
         self.csv_logger = None
@@ -643,6 +645,12 @@ class PCANViewClone(QMainWindow):
     # Connection control
     # ----------------------------
     def toggle_connection(self):
+
+        # ----- TEMPORARY CONNECT LOCK -----
+        if hasattr(self, "connect_locked") and self.connect_locked:
+            QMessageBox.warning(self, "Locked", "SORRY — I'M LOCKED!")
+            return
+
         # Start reader thread (it will attempt to init/reconnect automatically)
         if not self.reader or not self.reader.isRunning():
             self.reader = CANReader(self.pcan, CAN_CHANNEL, CAN_BAUDRATE)
