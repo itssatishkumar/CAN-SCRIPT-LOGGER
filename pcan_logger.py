@@ -648,7 +648,7 @@ class PCANViewClone(QMainWindow):
 
         # ----- TEMPORARY CONNECT LOCK -----
         if hasattr(self, "connect_locked") and self.connect_locked:
-            QMessageBox.warning(self, "Locked", "Heyy — I'M LOCKED 😔 !")
+            QMessageBox.warning(self, "Locked", "Heyy — I'M LOCKED !")
             return
 
         # Start reader thread (it will attempt to init/reconnect automatically)
