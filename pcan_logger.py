@@ -412,7 +412,7 @@ class PCANViewClone(QMainWindow):
         self.current_log_filename = None
         self.header_written = False
         # ----- TEMPORARY CONNECT LOCK -----
-        self.connect_locked = True
+        self.connect_locked = False
 
         # CSV logger (parallel)
         self.csv_logger = None
