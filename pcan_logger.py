@@ -28,6 +28,7 @@ PCAN_ERROR_QRCVEMPTY = getattr(
 
 import updater  # Import updater module
 from filesize import LogFileHandler  # <-- ensure filesize.py is present
+from signal_watch import SignalWatch
 
 # New imports for CSV logger
 import can
@@ -411,6 +412,7 @@ class PCANViewClone(QMainWindow):
         self.logging = False
         self.current_log_filename = None
         self.header_written = False
+        self.signal_watch = None
         # per-row format tracking
         self.row_id_format_rx = {}
         self.row_id_format_tx = {}
@@ -477,6 +479,15 @@ class PCANViewClone(QMainWindow):
         self.trace_tab = QWidget()
         self.setup_trace_tab()
         self.tabs.addTab(self.trace_tab, "Trace")
+
+        self.signal_tab = QWidget()
+        signal_layout = QVBoxLayout()
+        signal_layout.addWidget(QLabel("Signal Watch will load here…"))
+        self.signal_tab.setLayout(signal_layout)
+        self.tabs.addTab(self.signal_tab, "Signal Watch")
+
+        self.signal_watch = SignalWatch(self)
+        self.signal_watch.attach_ui(self.signal_tab)
 
         # Status bar (unchanged)
         self.status_bar = QStatusBar()
@@ -1045,6 +1056,9 @@ class PCANViewClone(QMainWindow):
             offset_sec = time.time() - self.log_start_time
             self.message_count += 1
             self.write_trc_entry(self.message_count, offset_sec, msg, tx=False)
+
+        if self.signal_watch:
+            self.signal_watch.process_frame(msg, ts_us)
 
     def _flush_pending_trace(self):
         """
