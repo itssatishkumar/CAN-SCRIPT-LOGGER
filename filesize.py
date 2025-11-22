@@ -23,16 +23,26 @@ TRC_HEADER_TEMPLATE = (
 
 
 class LogFileHandler:
-    def __init__(self, base_filename):
+    def __init__(self, base_filename, on_rotate_callback=None):
+        """
+        base_filename: given by user (e.g. mylog.trc)
+        on_rotate_callback: optional function called AFTER rotation
+        """
         self.base_filename = base_filename
         self.max_size = MAX_LOG_SIZE_MB * 1024 * 1024
         self.file_index = 1
         self.log_file = None
+
+        # callback to notify pcan_logger
+        self.on_rotate_callback = on_rotate_callback
+
+        # create first file (no header here)
         self.start_new_file(first_file=True)
 
     def start_new_file(self, first_file=False):
-        """Close current log file (if any) and start a new one.
-        Write header only for files after the first.
+        """
+        Close current log file and start a new one.
+        Write header only for rotated files.
         """
         if self.log_file:
             self.log_file.close()
@@ -41,7 +51,8 @@ class LogFileHandler:
         filename = f"{base}_{self.file_index}{ext}"
         self.log_file = open(filename, "w", encoding="utf-8")
 
-        if not first_file:  # Header only for 2nd file onwards
+        # Header ONLY for file 2, 3, ...
+        if not first_file:
             dt_now = time.localtime()
             human_time = time.strftime("%d-%m-%Y %H:%M:%S", dt_now)
             millis = int((time.time() % 1) * 1000)
@@ -54,23 +65,26 @@ class LogFileHandler:
             ))
             self.log_file.flush()
 
+        # Call rotation callback AFTER header is written
+        if not first_file and self.on_rotate_callback:
+            self.on_rotate_callback(filename)
+
         self.file_index += 1
         return filename
 
     def write(self, data_line):
-        """Write data to current log file and rotate if size exceeds limit."""
+        """Rotate BEFORE writing first message of next file."""
         if not self.log_file:
             self.start_new_file()
+
+        # Rotate first → then write message
+        if os.path.getsize(self.log_file.name) >= self.max_size:
+            self.start_new_file(first_file=False)
 
         self.log_file.write(data_line)
         self.log_file.flush()
 
-        if os.path.getsize(self.log_file.name) >= self.max_size:
-            # Create next file with header (since it's not first anymore)
-            self.start_new_file(first_file=False)
-
     def close(self):
-        """Close the current log file if open."""
         if self.log_file:
             self.log_file.close()
             self.log_file = None
