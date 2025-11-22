@@ -411,6 +411,17 @@ class PCANViewClone(QMainWindow):
         self.logging = False
         self.current_log_filename = None
         self.header_written = False
+        # per-row format tracking
+        self.row_id_format_rx = {}
+        self.row_id_format_tx = {}
+        self.row_data_format_rx = {}
+        self.row_data_format_tx = {}
+        # store canonical values for formatting
+        self.rx_row_id_value = {}
+        self.tx_row_id_value = {}
+        self.rx_row_data_bytes = {}
+        self.tx_row_data_bytes = {}
+        self.rx_id_to_row = {}
         # ----- TEMPORARY CONNECT LOCK -----
         self.connect_locked = False
 
@@ -567,6 +578,8 @@ class PCANViewClone(QMainWindow):
         self.receive_table.setHorizontalHeaderLabels(["CAN ID", "Count", "Cycle Time (ms)", "Data"])
         self.receive_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.receive_table.setAlternatingRowColors(True)
+        self.receive_table.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.receive_table.customContextMenuRequested.connect(self.show_rx_context_menu)
         receive_layout.addWidget(self.receive_table)
 
         transmit_frame = QFrame()
@@ -582,7 +595,7 @@ class PCANViewClone(QMainWindow):
         self.transmit_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.transmit_table.setAlternatingRowColors(True)
         self.transmit_table.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.transmit_table.customContextMenuRequested.connect(self.show_context_menu)
+        self.transmit_table.customContextMenuRequested.connect(self.show_tx_context_menu)
         transmit_layout.addWidget(self.transmit_table)
 
         splitter.addWidget(receive_frame)
@@ -611,7 +624,145 @@ class PCANViewClone(QMainWindow):
             QPushButton:hover {{ background-color: #005fa3; }}
         """)
 
-    def show_context_menu(self, pos: QPoint):
+    # ----------------------------
+    # Formatting helpers and context menus
+    # ----------------------------
+    def format_can_id(self, id_hex_string, fmt):
+        try:
+            id_val = int(id_hex_string, 16)
+        except Exception:
+            id_val = 0
+        if fmt == "dec":
+            return str(id_val)
+        return f"{id_val:X}h"
+
+    def format_bytes(self, bytes_src, fmt):
+        if isinstance(bytes_src, str):
+            parse_fmt = fmt if fmt in ("dec", "ascii") else "hex"
+            bytes_list = self._parse_data_text(bytes_src, parse_fmt)
+        else:
+            bytes_list = list(bytes_src or [])
+        if fmt == "dec":
+            return " ".join(str(b) for b in bytes_list)
+        if fmt == "ascii":
+            return "".join(chr(b) if 32 <= b <= 126 else "." for b in bytes_list)
+        return " ".join(f"{b:02X}" for b in bytes_list)
+
+    def _parse_id_text(self, text, fmt):
+        try:
+            if fmt == "dec":
+                return int(text)
+            return int(text.replace("h", ""), 16)
+        except Exception:
+            return 0
+
+    def _parse_data_text(self, text, fmt):
+        if text is None:
+            return []
+        if fmt == "ascii":
+            return [ord(ch) & 0xFF for ch in text]
+        bytes_out = []
+        for token in text.split():
+            try:
+                base = 10 if fmt == "dec" else 16
+                bytes_out.append(int(token, base) & 0xFF)
+            except Exception:
+                bytes_out.append(0)
+        return bytes_out
+
+    def refresh_single_rx_row(self, row):
+        id_fmt = self.row_id_format_rx.get(row, "hex")
+        data_fmt = self.row_data_format_rx.get(row, "hex")
+
+        can_id_val = self.rx_row_id_value.get(row)
+        if can_id_val is None:
+            item = self.receive_table.item(row, 0)
+            can_id_val = self._parse_id_text(item.text() if item else "0", id_fmt)
+            self.rx_row_id_value[row] = can_id_val
+        id_text = self.format_can_id(f"{can_id_val:X}", id_fmt)
+        self.receive_table.setItem(row, 0, QTableWidgetItem(id_text))
+
+        data_bytes = self.rx_row_data_bytes.get(row)
+        if data_bytes is None:
+            data_item = self.receive_table.item(row, 3)
+            data_bytes = self._parse_data_text(data_item.text() if data_item else "", data_fmt)
+            self.rx_row_data_bytes[row] = data_bytes
+        data_text = self.format_bytes(data_bytes, data_fmt)
+        self.receive_table.setItem(row, 3, QTableWidgetItem(data_text))
+
+    def refresh_single_tx_row(self, row):
+        id_fmt = self.row_id_format_tx.get(row, "hex")
+        data_fmt = self.row_data_format_tx.get(row, "hex")
+
+        id_val = self.tx_row_id_value.get(row)
+        if id_val is None:
+            item = self.transmit_table.item(row, 1)
+            id_val = self._parse_id_text(item.text() if item else "0", id_fmt)
+        self.tx_row_id_value[row] = id_val
+        id_text = self.format_can_id(f"{id_val:X}", id_fmt)
+        self.transmit_table.setItem(row, 1, QTableWidgetItem(id_text))
+
+        data_bytes = self.tx_row_data_bytes.get(row)
+        if data_bytes is None:
+            data_item = self.transmit_table.item(row, 4)
+            data_bytes = self._parse_data_text(data_item.text() if data_item else "", data_fmt)
+        self.tx_row_data_bytes[row] = data_bytes
+        data_text = self.format_bytes(data_bytes, data_fmt)
+        self.transmit_table.setItem(row, 4, QTableWidgetItem(data_text))
+
+    def show_rx_context_menu(self, pos: QPoint):
+        row = self.receive_table.rowAt(pos.y())
+        if row < 0:
+            return
+        # ensure defaults
+        self.row_id_format_rx.setdefault(row, "hex")
+        self.row_data_format_rx.setdefault(row, "hex")
+        current_id_fmt = self.row_id_format_rx.get(row, "hex")
+        current_data_fmt = self.row_data_format_rx.get(row, "hex")
+        id_item = self.receive_table.item(row, 0)
+        data_item = self.receive_table.item(row, 3)
+        if id_item:
+            self.rx_row_id_value[row] = self._parse_id_text(id_item.text(), current_id_fmt)
+        if data_item:
+            self.rx_row_data_bytes[row] = self._parse_data_text(data_item.text(), current_data_fmt)
+
+        menu = QMenu(self.receive_table)
+        id_menu = menu.addMenu("CAN ID Format")
+        id_hex = id_menu.addAction("Hexadecimal")
+        id_hex.setCheckable(True)
+        id_dec = id_menu.addAction("Decimal")
+        id_dec.setCheckable(True)
+
+        data_menu = menu.addMenu("Data Bytes Format")
+        data_hex = data_menu.addAction("Hexadecimal")
+        data_hex.setCheckable(True)
+        data_dec = data_menu.addAction("Decimal")
+        data_dec.setCheckable(True)
+        data_ascii = data_menu.addAction("ASCII")
+        data_ascii.setCheckable(True)
+
+        id_hex.setChecked(current_id_fmt == "hex")
+        id_dec.setChecked(current_id_fmt == "dec")
+        data_hex.setChecked(current_data_fmt == "hex")
+        data_dec.setChecked(current_data_fmt == "dec")
+        data_ascii.setChecked(current_data_fmt == "ascii")
+
+        action = menu.exec_(self.receive_table.viewport().mapToGlobal(pos))
+        if action == id_hex:
+            self.row_id_format_rx[row] = "hex"
+        elif action == id_dec:
+            self.row_id_format_rx[row] = "dec"
+        elif action == data_hex:
+            self.row_data_format_rx[row] = "hex"
+        elif action == data_dec:
+            self.row_data_format_rx[row] = "dec"
+        elif action == data_ascii:
+            self.row_data_format_rx[row] = "ascii"
+
+        if action:
+            self.refresh_single_rx_row(row)
+
+    def _show_tx_rowless_context_menu(self, pos: QPoint):
         menu = QMenu()
         add_action = menu.addAction("New Message")
         del_action = menu.addAction("Delete Selected")
@@ -625,6 +776,76 @@ class PCANViewClone(QMainWindow):
             selected = self.transmit_table.currentRow()
             if selected >= 0:
                 self.transmit_table.removeRow(selected)
+                # clean format tracking for remaining rows
+                self._reindex_tx_row_maps(selected)
+
+    def show_tx_context_menu(self, pos: QPoint):
+        row = self.transmit_table.rowAt(pos.y())
+        if row < 0:
+            self._show_tx_rowless_context_menu(pos)
+            return
+
+        self.row_id_format_tx.setdefault(row, "hex")
+        self.row_data_format_tx.setdefault(row, "hex")
+        current_id_fmt = self.row_id_format_tx.get(row, "hex")
+        current_data_fmt = self.row_data_format_tx.get(row, "hex")
+        id_item = self.transmit_table.item(row, 1)
+        data_item = self.transmit_table.item(row, 4)
+        if id_item:
+            self.tx_row_id_value[row] = self._parse_id_text(id_item.text(), current_id_fmt)
+        if data_item:
+            self.tx_row_data_bytes[row] = self._parse_data_text(data_item.text(), current_data_fmt)
+
+        menu = QMenu(self.transmit_table)
+        id_menu = menu.addMenu("CAN ID Format")
+        id_hex = id_menu.addAction("Hexadecimal")
+        id_hex.setCheckable(True)
+        id_dec = id_menu.addAction("Decimal")
+        id_dec.setCheckable(True)
+
+        data_menu = menu.addMenu("Data Bytes Format")
+        data_hex = data_menu.addAction("Hexadecimal")
+        data_hex.setCheckable(True)
+        data_dec = data_menu.addAction("Decimal")
+        data_dec.setCheckable(True)
+        data_ascii = data_menu.addAction("ASCII")
+        data_ascii.setCheckable(True)
+
+        id_hex.setChecked(current_id_fmt == "hex")
+        id_dec.setChecked(current_id_fmt == "dec")
+        data_hex.setChecked(current_data_fmt == "hex")
+        data_dec.setChecked(current_data_fmt == "dec")
+        data_ascii.setChecked(current_data_fmt == "ascii")
+
+        action = menu.exec_(self.transmit_table.viewport().mapToGlobal(pos))
+        if action == id_hex:
+            self.row_id_format_tx[row] = "hex"
+        elif action == id_dec:
+            self.row_id_format_tx[row] = "dec"
+        elif action == data_hex:
+            self.row_data_format_tx[row] = "hex"
+        elif action == data_dec:
+            self.row_data_format_tx[row] = "dec"
+        elif action == data_ascii:
+            self.row_data_format_tx[row] = "ascii"
+
+        if action:
+            self.refresh_single_tx_row(row)
+
+    def _reindex_tx_row_maps(self, removed_row):
+        def _shift_map(src):
+            shifted = {}
+            for row_idx, value in src.items():
+                if row_idx == removed_row:
+                    continue
+                new_idx = row_idx if row_idx < removed_row else row_idx - 1
+                shifted[new_idx] = value
+            return shifted
+
+        self.row_id_format_tx = _shift_map(self.row_id_format_tx)
+        self.row_data_format_tx = _shift_map(self.row_data_format_tx)
+        self.tx_row_id_value = _shift_map(self.tx_row_id_value)
+        self.tx_row_data_bytes = _shift_map(self.tx_row_data_bytes)
 
     def add_transmit_row(self, data):
         row = self.transmit_table.rowCount()
@@ -632,14 +853,24 @@ class PCANViewClone(QMainWindow):
         enable_box = QCheckBox()
         self.transmit_table.setCellWidget(row, 0, enable_box)
         msg_type = "EXT" if data["extended"] else "STD"
+        can_id_hex = (data["id"] or "0").replace("h", "").upper()
         databytes = " ".join([d if d else "00" for d in data["data"]])
-        self.transmit_table.setItem(row, 1, QTableWidgetItem(data["id"] + "h"))
+        data_bytes_list = self._parse_data_text(databytes, "hex")
+        self.transmit_table.setItem(row, 1, QTableWidgetItem(self.format_can_id(can_id_hex, "hex")))
         self.transmit_table.setItem(row, 2, QTableWidgetItem(msg_type))
         self.transmit_table.setItem(row, 3, QTableWidgetItem(str(data["length"])))
         self.transmit_table.setItem(row, 4, QTableWidgetItem(databytes))
         self.transmit_table.setItem(row, 5, QTableWidgetItem(data["cycle"]))
         self.transmit_table.setItem(row, 6, QTableWidgetItem("0"))
         self.transmit_table.setItem(row, 7, QTableWidgetItem(data["comment"]))
+        self.row_id_format_tx[row] = "hex"
+        self.row_data_format_tx[row] = "hex"
+        try:
+            self.tx_row_id_value[row] = int(can_id_hex, 16)
+        except Exception:
+            self.tx_row_id_value[row] = 0
+        self.tx_row_data_bytes[row] = data_bytes_list
+        self.refresh_single_tx_row(row)
 
     # ----------------------------
     # Connection control
@@ -754,16 +985,22 @@ class PCANViewClone(QMainWindow):
         can_id = msg.ID
         length = msg.LEN
         data = ' '.join(f"{b:02X}" for b in msg.DATA[:length])
+        data_bytes_list = self._parse_data_text(data, "hex")
+        can_id_hex = f"{can_id:X}"
 
         # Update live_data and receive table (unchanged)
         if can_id not in self.live_data:
             self.live_data[can_id] = {"count": 1, "last_ts": ts_us, "cycle_time": 0, "data": data}
             row = self.receive_table.rowCount()
             self.receive_table.insertRow(row)
-            self.receive_table.setItem(row, 0, QTableWidgetItem(f"{can_id:03X}"))
             self.receive_table.setItem(row, 1, QTableWidgetItem("1"))
             self.receive_table.setItem(row, 2, QTableWidgetItem("0"))
-            self.receive_table.setItem(row, 3, QTableWidgetItem(data))
+            self.row_id_format_rx[row] = "hex"
+            self.row_data_format_rx[row] = "hex"
+            self.rx_row_id_value[row] = can_id
+            self.rx_row_data_bytes[row] = data_bytes_list
+            self.rx_id_to_row[can_id_hex] = row
+            self.refresh_single_rx_row(row)
         else:
             old = self.live_data[can_id]
             cycle = (ts_us - old["last_ts"]) / 1000.0
@@ -774,13 +1011,20 @@ class PCANViewClone(QMainWindow):
             old["cycle_time"] = cycle
             old["data"] = data
             # update receive table row
-            for row in range(self.receive_table.rowCount()):
-                item = self.receive_table.item(row, 0)
-                if item and item.text() == f"{can_id:03X}":
-                    self.receive_table.setItem(row, 1, QTableWidgetItem(str(old["count"])))
-                    self.receive_table.setItem(row, 2, QTableWidgetItem(f"{cycle:.1f}"))
-                    self.receive_table.setItem(row, 3, QTableWidgetItem(data))
-                    break
+            row = self.rx_id_to_row.get(can_id_hex)
+            if row is None:
+                for idx in range(self.receive_table.rowCount()):
+                    if self.rx_row_id_value.get(idx) == can_id:
+                        row = idx
+                        break
+                if row is not None:
+                    self.rx_id_to_row[can_id_hex] = row
+            if row is not None:
+                self.receive_table.setItem(row, 1, QTableWidgetItem(str(old["count"])))
+                self.receive_table.setItem(row, 2, QTableWidgetItem(f"{cycle:.1f}"))
+                self.rx_row_id_value[row] = can_id
+                self.rx_row_data_bytes[row] = data_bytes_list
+                self.refresh_single_rx_row(row)
 
         # Trace timestamp selection
         if self.recording_start_time is not None:
@@ -855,10 +1099,17 @@ class PCANViewClone(QMainWindow):
 
     def _send_can_row(self, row):
         try:
-            can_id_text = self.transmit_table.item(row, 1).text()
-            can_id = int(can_id_text.replace("h", ""), 16)
-            data_str = self.transmit_table.item(row, 4).text().strip()
-            data_bytes = [int(x, 16) for x in data_str.split() if x]
+            id_item = self.transmit_table.item(row, 1)
+            data_item = self.transmit_table.item(row, 4)
+            self.row_id_format_tx.setdefault(row, "hex")
+            self.row_data_format_tx.setdefault(row, "hex")
+            id_fmt = self.row_id_format_tx.get(row, "hex")
+            data_fmt = self.row_data_format_tx.get(row, "hex")
+            can_id = self._parse_id_text(id_item.text() if id_item else "0", id_fmt)
+            data_bytes = self._parse_data_text(data_item.text().strip() if data_item else "", data_fmt)
+            data_bytes = data_bytes[:8]
+            self.tx_row_id_value[row] = can_id
+            self.tx_row_data_bytes[row] = data_bytes
             length = len(data_bytes)
             msg = TPCANMsg()
             msg.ID = can_id
@@ -1004,7 +1255,10 @@ class PCANViewClone(QMainWindow):
                     pass
                 self.log_handler = None
 
-            self.log_handler = LogFileHandler(filename)
+            self.log_handler = LogFileHandler(
+                filename,
+                on_rotate_callback=self._on_log_file_rotated
+            )
             self.current_log_filename = filename
             self.log_start_time = time.time()
             self.message_count = 0
@@ -1102,21 +1356,38 @@ class PCANViewClone(QMainWindow):
             )
 
     def write_trc_entry(self, msg_num, offset_sec, msg, tx=False):
+        if not self.log_handler:
+            return
+
+        # 1. FORCE ROTATION BEFORE WRITING
+        rotated = False
+        if os.path.getsize(self.log_handler.log_file.name) >= self.log_handler.max_size:
+            self.log_handler.start_new_file(first_file=False)
+            rotated = True
+
+        # Reset numbering/time base for the first frame in a rotated file
+        if rotated:
+            self.message_count = 1
+            msg_num = 1
+
+        # 2. Continue as usual
         direction = "Tx" if tx else "Rx"
         data_str = " ".join(f"{b:02X}" for b in msg.DATA[:msg.LEN])
-        offset_ms = offset_sec * 1000
-        if self.log_handler:
-            try:
-                self.log_handler.write(
-                    f"{msg_num:6}){offset_ms:11.1f}  {direction:<3}        "
-                    f"{msg.ID:04X}  {msg.LEN}  {data_str}\n"
-                )
-            except Exception:
-                self.status_bus.setText("Failed writing TRC entry")
+        offset_ms = (time.time() - self.log_start_time) * 1000
+
+        self.log_handler.write(
+            f"{msg_num:6}){offset_ms:11.1f}  {direction:<3}        "
+            f"{msg.ID:04X}  {msg.LEN}  {data_str}\n"
+        )
 
     # ----------------------------
     # Blink status text
     # ----------------------------
+    def _on_log_file_rotated(self, new_filename):
+        self.message_count = 0
+        self.log_start_time = time.time()
+        self.current_log_filename = new_filename
+
     def _blink_status_text(self):
         if self.logging:
             if self._blink_state:
