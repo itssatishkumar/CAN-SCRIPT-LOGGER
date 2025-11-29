@@ -407,6 +407,7 @@ class PCANViewClone(QMainWindow):
         self.live_data = {}
         self.log_handler = None
         self.log_start_time = None
+        self.log_base_ts_us = None  # base timestamp (us) for TRC offsets
         self.recording_start_time = None
         self.message_count = 0
         self.logging = False
@@ -1052,10 +1053,10 @@ class PCANViewClone(QMainWindow):
         self._pending_trace.append(trace_row)
 
         # Logging: write to TRC immediately (keeps sequence)
-        if self.logging and self.log_start_time:
-            offset_sec = time.time() - self.log_start_time
+        if self.logging:
+            ts_for_log = ts_us if ts_us is not None else int(time.time() * 1e6)
             self.message_count += 1
-            self.write_trc_entry(self.message_count, offset_sec, msg, tx=False)
+            self.write_trc_entry(self.message_count, ts_for_log, msg, tx=False)
 
         if self.signal_watch:
             self.signal_watch.process_frame(msg, ts_us)
@@ -1145,13 +1146,13 @@ class PCANViewClone(QMainWindow):
                 count += 1
                 count_item.setText(str(count))
 
-                # Logging Tx frame
-                if self.logging and self.log_start_time:
-                    offset_sec = time.time() - self.log_start_time
-                    self.message_count += 1
-                    self.write_trc_entry(self.message_count, offset_sec, msg, tx=True)
-
                 ts_us = int(time.time() * 1e6)
+
+                # Logging Tx frame
+                if self.logging:
+                    self.message_count += 1
+                    self.write_trc_entry(self.message_count, ts_us, msg, tx=True)
+
                 data = ' '.join(f"{b:02X}" for b in data_bytes)
 
                 # Add TX to pending trace queue (so UI updates are batched)
@@ -1275,6 +1276,7 @@ class PCANViewClone(QMainWindow):
             )
             self.current_log_filename = filename
             self.log_start_time = time.time()
+            self.log_base_ts_us = None
             self.message_count = 0
             self.header_written = False
             self.write_trc_header()
@@ -1325,6 +1327,7 @@ class PCANViewClone(QMainWindow):
             except Exception:
                 pass
             self.log_handler = None
+        self.log_base_ts_us = None
         self.current_log_filename = None
         self.log_start_btn.setEnabled(True)
         self.log_stop_btn.setEnabled(False)
@@ -1369,25 +1372,40 @@ class PCANViewClone(QMainWindow):
                 f";---+--   ----+----  --+--  ----+---  +  -+ -- -- -- -- -- -- --\n"
             )
 
-    def write_trc_entry(self, msg_num, offset_sec, msg, tx=False):
+    def write_trc_entry(self, msg_num, ts_us, msg, tx=False):
         if not self.log_handler:
             return
 
+        # fallback to wall-clock time if no timestamp is provided
+        if ts_us is None:
+            try:
+                ts_us = int(time.time() * 1e6)
+            except Exception:
+                ts_us = 0
+
         # 1. FORCE ROTATION BEFORE WRITING
         rotated = False
-        if os.path.getsize(self.log_handler.log_file.name) >= self.log_handler.max_size:
-            self.log_handler.start_new_file(first_file=False)
-            rotated = True
+        try:
+            if os.path.getsize(self.log_handler.log_file.name) >= self.log_handler.max_size:
+                self.log_handler.start_new_file(first_file=False)
+                rotated = True
+        except Exception:
+            pass
 
         # Reset numbering/time base for the first frame in a rotated file
         if rotated:
             self.message_count = 1
             msg_num = 1
+            self.log_base_ts_us = None
+
+        # establish base timestamp once per file
+        if self.log_base_ts_us is None:
+            self.log_base_ts_us = ts_us
 
         # 2. Continue as usual
         direction = "Tx" if tx else "Rx"
         data_str = " ".join(f"{b:02X}" for b in msg.DATA[:msg.LEN])
-        offset_ms = (time.time() - self.log_start_time) * 1000
+        offset_ms = (ts_us - self.log_base_ts_us) / 1000.0
 
         self.log_handler.write(
             f"{msg_num:6}){offset_ms:11.1f}  {direction:<3}        "
@@ -1400,6 +1418,7 @@ class PCANViewClone(QMainWindow):
     def _on_log_file_rotated(self, new_filename):
         self.message_count = 0
         self.log_start_time = time.time()
+        self.log_base_ts_us = None
         self.current_log_filename = new_filename
 
     def _blink_status_text(self):
