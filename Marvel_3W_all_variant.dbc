@@ -35,6 +35,12 @@ BS_:
 
 BU_:
 
+BO_ 297 IMD_MESSAGES: 8 Vector__XXX
+ SG_ Isolation_Measurement_Active : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ VBatFET_OFF : 32|16@1+ (0.01,0) [0|655.35] "V" Vector__XXX
+ SG_ VBatFET_ON : 16|16@1+ (0.01,0) [0|655.35] "V" Vector__XXX
+ SG_ Riso : 0|16@1+ (0.01,0) [0|655.35] "M ohm" Vector__XXX
+
 BO_ 303 MANIFEST_INFO_ID: 8 Vector__XXX
  SG_ manifestMissing : 32|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ BMSmanifestPatch : 24|8@1+ (1,0) [0|255] "" Vector__XXX
@@ -221,124 +227,122 @@ BO_ 375 CellVoltage_Group_30: 8 Vector__XXX
  SG_ CellVoltage_118 : 16|16@1+ (0.1,0) [0|0] "mV" Vector__XXX
  SG_ CellVoltage_117 : 0|16@1+ (0.1,0) [0|0] "mV" Vector__XXX
 
-
 BO_ 274 ExtTherm_Capacity_Group_1: 8 Vector__XXX
  SG_ Pack_Capacity : 48|16@1- (0.01,0) [0|0] "Ah" Vector__XXX
- SG_ ExtTherm_6 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_5 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_4 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_3 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_2 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_1 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_6 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_5 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_4 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_3 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_2 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_1 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 304 ExtTherm_Group_2: 8 Vector__XXX
- SG_ ExtTherm_14 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_13 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_12 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_11 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_10 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_9 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_8 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_7 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_14 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_13 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_12 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_11 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_10 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_9 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_8 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_7 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 305 ExtTherm_Group_3: 8 Vector__XXX
- SG_ ExtTherm_22 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_21 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_20 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_19 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_18 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_17 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_16 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_15 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_22 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_21 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_20 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_19 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_18 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_17 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_16 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_15 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 306 ExtTherm_Group_4: 8 Vector__XXX
- SG_ ExtTherm_30 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_29 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_28 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_27 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_26 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_25 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_24 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_23 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_30 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_29 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_28 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_27 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_26 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_25 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_24 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_23 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 307 ExtTherm_Group_5: 8 Vector__XXX
- SG_ ExtTherm_38 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_37 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_36 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_35 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_34 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_33 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_32 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_31 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_38 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_37 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_36 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_35 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_34 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_33 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_32 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_31 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 308 ExtTherm_Group_6: 8 Vector__XXX
- SG_ ExtTherm_46 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_45 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_44 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_43 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_42 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_41 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_40 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_39 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_46 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_45 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_44 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_43 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_42 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_41 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_40 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_39 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 309 ExtTherm_Group_7: 8 Vector__XXX
- SG_ ExtTherm_54 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_53 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_52 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_51 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_50 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_49 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_48 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_47 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_54 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_53 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_52 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_51 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_50 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_49 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_48 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_47 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 310 ExtTherm_Group_8: 8 Vector__XXX
- SG_ ExtTherm_62 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_61 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_60 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_59 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_58 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_57 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_56 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_55 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_62 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_61 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_60 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_59 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_58 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_57 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_56 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_55 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 311 ExtTherm_Group_9: 8 Vector__XXX
- SG_ ExtTherm_64 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ ExtTherm_63 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ ExtTherm_64 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ ExtTherm_63 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 301 IntTherm_Group_1: 8 Vector__XXX
- SG_ IntTherm_8 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_7 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_6 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_5 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_4 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_3 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_2 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_1 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ IntTherm_8 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_7 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_6 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_5 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_4 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_3 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_2 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_1 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 320 IntTherm_Group_2: 8 Vector__XXX
- SG_ IntTherm_16 : 56|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_15 : 48|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_14 : 40|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_13 : 32|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_12 : 24|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_11 : 16|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_10 : 8|8@1+ (1,0) [0|0] "degC" Vector__XXX
- SG_ IntTherm_9 : 0|8@1+ (1,0) [0|0] "degC" Vector__XXX
+ SG_ IntTherm_16 : 56|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_15 : 48|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_14 : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_13 : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_12 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_11 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_10 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ IntTherm_9 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 335 Master_NTCs: 4 Vector__XXX
- SG_ Master_NTC_4 : 24|8@1- (1,0) [0|0] "degC" Vector__XXX
- SG_ Master_NTC_3 : 16|8@1- (1,0) [0|0] "degC" Vector__XXX
- SG_ Master_NTC_2 : 8|8@1- (1,0) [0|0] "degC" Vector__XXX
- SG_ Master_NTC_1 : 0|8@1- (1,0) [0|0] "degC" Vector__XXX
+ SG_ Master_NTC_4 : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Master_NTC_3 : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Master_NTC_2 : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Master_NTC_1 : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 334 NTC_Delta: 6 Vector__XXX
- SG_ Int_Temp_Delta : 40|8@1- (1,0) [0|255] "degC" Vector__XXX
- SG_ Int_Temp_Min   : 32|8@1- (1,0) [0|255] "degC" Vector__XXX
- SG_ Int_Temp_Max   : 24|8@1- (1,0) [0|255] "degC" Vector__XXX
- SG_ Ext_Temp_Delta : 16|8@1- (1,0) [0|255] "degC" Vector__XXX
- SG_ Ext_Temp_Min   : 8|8@1- (1,0) [0|255] "degC" Vector__XXX
- SG_ Ext_Temp_Max   : 0|8@1- (1,0) [0|255] "degC" Vector__XXX
-
+ SG_ Int_Temp_Delta : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Int_Temp_Min : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Int_Temp_Max : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Ext_Temp_Delta : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Ext_Temp_Min : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Ext_Temp_Max : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
 
 BO_ 265 AA_Batt_Param_2: 8 Vector__XXX
  SG_ Pack_Voltage : 48|16@1+ (0.1,0) [0|0] "V" Vector__XXX
@@ -370,10 +374,10 @@ BO_ 263 AC_ChargerID: 8 Vector__XXX
  SG_ ChargerCurrent : 23|16@0+ (0.1,0) [0|6553.5] "Amps" Vector__XXX
 
 BO_ 336 BalancingMask: 8 Vector__XXX
- SG_ BalancingMask0 : 0|64@1- (1,0) [-9.22337203685478E+18|9.22337203685478E+18] "" Vector__XXX
+ SG_ BalancingMask0 : 0|64@1+ (1,0) [0|1.84467440737096E+019] "" Vector__XXX
 
 BO_ 337 BalancingMask1: 8 Vector__XXX
- SG_ BalancingMask1 : 0|64@1- (1,0) [-9.22337203685478E+18|9.22337203685478E+18] "" Vector__XXX
+ SG_ BalancingMask1 : 0|64@1+ (1,0) [0|1.84467440737096E+019] "" Vector__XXX
 
 BO_ 298 BB_Dynamic_Limits: 8 Vector__XXX
  SG_ ConfigID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -438,6 +442,8 @@ BO_ 600 AB_Error_Codes: 8 Vector__XXX
  SG_ StartupSanityFail : 5|1@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 608 AB_Error_Codes_1: 8 Vector__XXX
+ SG_ Isolation_warning : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Isolation_Failure : 26|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ SD_Power_off_Pending : 24|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ History_ActiveErrorGroup2 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ History_ActiveErrorGroup1 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
