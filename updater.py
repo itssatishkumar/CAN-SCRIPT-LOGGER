@@ -42,10 +42,6 @@ def download_file(url, target_path, parent=None):
 
         downloaded = 0
         chunk_size = 8192
-
-        # Ensure parent directory exists
-        os.makedirs(os.path.dirname(target_path), exist_ok=True)
-
         with open(target_path, "wb") as f:
             for chunk in r.iter_content(chunk_size):
                 if chunk:
@@ -71,31 +67,6 @@ def is_running_as_exe():
     return ext.lower() == ".exe"
 
 
-def list_repo_files_recursive(repo_user, repo_name, path=""):
-    """
-    Return a flat list of file metadata for all files in the repo, recursively,
-    using the GitHub Contents API.
-    """
-    api_url = f"https://api.github.com/repos/{repo_user}/{repo_name}/contents/{path}"
-    r = requests.get(api_url, timeout=15)
-    r.raise_for_status()
-    items = r.json()
-
-    all_files = []
-    if isinstance(items, dict) and items.get("type") == "file":
-        # Single file response
-        return [items]
-
-    for item in items:
-        if item.get("type") == "file":
-            all_files.append(item)
-        elif item.get("type") == "dir":
-            subpath = item.get("path", "")
-            all_files.extend(list_repo_files_recursive(repo_user, repo_name, subpath))
-
-    return all_files
-
-
 # ----------------------------
 # Core updater logic
 # ----------------------------
@@ -109,11 +80,7 @@ def check_for_update(
 ):
     """
     Check GitHub for new version and update if needed.
-
-    FIX:
-    - Recursively downloads all .py, .txt, and .dbc files from the repo
-      (including new folders like MCU_DBC/) when version changes.
-    - Preserves folder structure locally using file_info["path"].
+    Auto-downloads all .py, .txt, and .dbc files in repo root when version changes.
     """
 
     parent = app.activeWindow() if app else None
@@ -168,17 +135,19 @@ def check_for_update(
 
         sys.exit(0)
 
-    # --- Step 5: Script mode (RECURSIVE FIX) ---
+    # --- Step 5: Script mode ---
+    api_url = f"https://api.github.com/repos/{repo_user}/{repo_name}/contents/"
     try:
-        all_files = list_repo_files_recursive(repo_user, repo_name, path="")
+        r = requests.get(api_url, timeout=15)
+        r.raise_for_status()
+        files = r.json()
     except Exception as e:
         QMessageBox.warning(parent, "Update Failed", f"Failed to fetch file list:\n{e}")
         return
 
-    # Include .py, .txt, and .dbc files from anywhere in the repo
+    # Include .py, .txt, and .dbc files
     valid_files = [
-        f for f in all_files
-        if f.get("type") == "file" and f.get("name", "").endswith((".py", ".txt", ".dbc"))
+        f for f in files if f["name"].endswith((".py", ".txt", ".dbc")) and f["type"] == "file"
     ]
 
     if not valid_files:
@@ -192,11 +161,11 @@ def check_for_update(
     overall_progress.show()
 
     for i, file_info in enumerate(valid_files, 1):
-        rel_path = file_info["path"]            # IMPORTANT: keeps folders (e.g., MCU_DBC/x.dbc)
+        filename = file_info["name"]
         file_url = file_info["download_url"]
-        local_path = os.path.join(target_folder, rel_path)
+        local_path = os.path.join(target_folder, filename)
 
-        overall_progress.setLabelText(f"Updating {rel_path} ({i}/{total_files})")
+        overall_progress.setLabelText(f"Updating {filename} ({i}/{total_files})")
         overall_progress.setValue(i - 1)
         QApplication.processEvents()
 
@@ -205,15 +174,15 @@ def check_for_update(
 
         success = download_file(file_url, local_path, parent=parent)
         if not success:
-            QMessageBox.warning(parent, "Update Failed", f"Failed to update {rel_path}")
+            QMessageBox.warning(parent, "Update Failed", f"Failed to update {filename}")
             return
 
     overall_progress.close()
 
-    # --- Step 6: Update version.txt locally ---
+    # --- Step 6: Update version.txt ---
     try:
         version_file_path = os.path.join(target_folder, "version.txt")
-        with open(version_file_path, "w", encoding="utf-8") as vf:
+        with open(version_file_path, "w") as vf:
             vf.write(online_version)
     except Exception as e:
         print(f"Failed to update local version file: {e}")
