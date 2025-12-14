@@ -1,0 +1,186 @@
+VERSION ""
+
+
+BS_:
+
+BU_:
+
+
+// TX20 / CAN ID 0x11A / 282
+BO_ 282 Cell_Temperature_Info_Extended: 8 Vector__XXX
+ SG_ CMU7_T1           : 0|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU8_T1           : 8|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU9_T1           : 16|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU10_T1          : 24|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU11_T1          : 32|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ Cell_Temp_Lowest   : 40|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ Cell_Temp_Maximum  : 48|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ Average_Cell_Temp_CMU : 56|8@1- (1,0) [-40|125] "C" Vector__XXX
+
+// TX14 / CAN ID 0x11C / 284
+BO_ 284 Pack_Capacity_Info: 8 Vector__XXX
+ SG_ PACK_Q_DESIGN : 0|16@1+ (0.1,0) [0|180] "Ah" Vector__XXX
+ SG_ PACK_Q_FULL   : 16|16@1+ (0.1,0) [0|180] "Ah" Vector__XXX
+ SG_ V_Min         : 32|16@1+ (0.1,0) [1|4] "mV" Vector__XXX
+ SG_ V_Max         : 48|16@1+ (0.1,0) [1|4] "mV" Vector__XXX
+
+// TX11 / CAN ID 0x12A / 298
+BO_ 298 Battery_Parameters_4: 8 Vector__XXX
+ SG_ DYN_LIM_I_IN : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
+ SG_ DYN_LIM_I_OUT : 16|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
+ SG_ FW_FullVersion : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ Config_ID : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+
+// TX18 / CAN ID 0x123 / 291
+BO_ 291 Cell_Voltage_Info_11: 8 Vector__XXX
+ SG_ CMU_11_CV_6 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_11_CV_7 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_12_CV_2 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_12_CV_4 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX17 / CAN ID 0x122 / 290
+BO_ 290 Cell_Voltage_Info_10: 8 Vector__XXX
+ SG_ CMU_10_CV_5 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_10_CV_7 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_11_CV_2 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_11_CV_4 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX16 / CAN ID 0x121 / 289
+BO_ 289 Cell_Voltage_Info_9: 8 Vector__XXX
+ SG_ CMU_9_CV5  : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_9_CV7  : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_10_CV1  : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_10_CV3  : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX15 / CAN ID 0x120 / 288
+BO_ 288 Cell_Voltage_Info_8: 8 Vector__XXX
+ SG_ CMU_8_CV4  : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_8_CV6 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_9_CV1  : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_9_CV3  : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX13 / CAN ID 0x11A / 281
+BO_ 281 Cell_Voltage_Info_7: 8 Vector__XXX
+ SG_ CMU_7_CV4 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_7_CV6 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_7_CV7 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_8_CV2 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX9 / CAN ID 0x118 / 280
+BO_ 280 Cell_Voltage_Info_6: 8 Vector__XXX
+ SG_ CMU_6_CV3 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_6_CV5 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_6_CV7 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_7_CV2 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX8 / CAN ID 0x117 / 279
+BO_ 279 Cell_Voltage_Info_5: 8 Vector__XXX
+ SG_ CMU_5_CV3 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_5_CV5 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_5_CV7 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_6_CV1 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX7 / CAN ID 0x116 / 278
+BO_ 278 Cell_Voltage_Info_4: 8 Vector__XXX
+ SG_ CMU_4_CV2 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_4_CV4 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_4_CV6 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_5_CV1 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+
+// TX6 / CAN ID 0x115 / 277
+BO_ 277 Cell_Voltage_Info_3: 8 Vector__XXX
+ SG_ CMU_3_CV2 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_3_CV4 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_3_CV6 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_3_CV7 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX5 / CAN ID 0x114 / 276
+BO_ 276 Cell_Voltage_Info_2: 8 Vector__XXX
+ SG_ CMU_2_CV1 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_2_CV3 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_2_CV5 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_2_CV7 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+
+// TX4 / CAN ID 0x113 / 275
+BO_ 275 Cell_Voltage_Info_1: 8 Vector__XXX
+ SG_ CMU_1_CV1 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_1_CV3 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_1_CV5 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_1_CV7 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX3 / CAN ID 0x112 / 274
+BO_ 274 Battery_Parameters_3: 8 Vector__XXX
+ SG_ CMU1_T1 : 0|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU2_T1 : 8|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU3_T1 : 16|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU4_T1 : 24|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU5_T1 : 32|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ CMU6_T1 : 40|8@1- (1,0) [-40|125] "C" Vector__XXX
+ SG_ Remaining_PCap     : 48|16@1+ (0.1,0) [0|180] "Ah" Vector__XXX
+
+// TX1 / CAN ID 0x110 / 272
+BO_ 272 Battery_Parameters_2: 8 Vector__XXX
+ SG_ Pack_Current : 32|32@1- (1e-005,0) [21474.8|21474.8] "A" Vector__XXX
+ SG_ Flags_PreCharge_Active : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Flags_Balancing_Active : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Balancing_Limit : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+// TX2 / CAN ID 0x109 / 265
+BO_ 265 Battery_Parameters_1: 8 Vector__XXX
+ SG_ SoC                  : 0|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
+ SG_ SoH                  : 16|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
+ SG_ BMS_State             : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Flags_Fully_Charged   : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Total_Pack_Voltage    : 48|16@1+ (0.1,0) [0|6553.5] "V" Vector__XXX
+
+// TX12 / CAN ID 0x108 / 264
+BO_ 264 Public_Charger_Requirement_Limit: 8 Vector__XXX
+ SG_ Max_Allowed_Cell_Voltage : 0|16@1+ (1,0) [0|65535] "mV" Vector__XXX
+ SG_ Max_Allowed_Pack_Voltage : 16|16@1+ (1,0) [0|65535] "V" Vector__XXX
+ SG_ Max_Allowed_Cell_Temp : 32|16@1+ (1,0) [0|65535] "C" Vector__XXX
+ SG_ Max_Allowed_Current : 48|16@1+ (1,0) [0|65535] "A" Vector__XXX
+
+// TX10 / CAN ID 0x107 / 263
+BO_ 263 Charger_Info: 8 Vector__XXX
+ SG_ BMS_Voltage_Request : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
+ SG_ BMS_Current_Request : 23|16@0+ (0.1,0) [0|6553.5] "A" Vector__XXX
+ SG_ Charging_Status : 39|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ CMU3_CELL_BITMASK : 47|16@0+ (1,0) [0|65535] "" Vector__XXX
+ SG_ Coin_cell_voltage_status : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+
+// TX19 / CAN ID 0x124 / 292
+BO_ 292 Cell_Voltage_Info_12: 8 Vector__XXX
+ SG_ CMU_13_CV1   : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ CMU_13_CV_3  : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ V_Min_ID_CMU         : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ V_Min_Cell_Number    : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ V_Max_ID_CMU         : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ V_Max_Cell_Number    : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 600 Active_Error: 8 Vector__XXX
+ SG_ Active_error_Count : 40|16@1+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 602 Error_Code_1: 8 Vector__XXX
+ SG_ Error_Code_1 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 603 Error_Code_2: 8 Vector__XXX
+ SG_ Error_Code_2 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 604 Error_Code_3: 8 Vector__XXX
+ SG_ Error_Code_3 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 605 Error_Code_4: 8 Vector__XXX
+ SG_ Error_Code_4 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 606 Error_Code_5: 8 Vector__XXX
+ SG_ Error_Code_5 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 607 Error_Code_6: 8 Vector__XXX
+ SG_ Error_Code_6 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+
+
+
