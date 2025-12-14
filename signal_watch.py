@@ -194,18 +194,19 @@ class SignalWatch(QObject):
         # reset CSV logging when switching databases to keep headers in sync
         self._stop_csv_logging(user_requested=True)
         try:
-            self.db = cantools.database.load_file(path)
+            self.db = self._load_dbc_with_fallback(path)
             if self.db_path_edit is not None:
                 self.db_path_edit.setText(path)
             self.clear()
             self._update_csv_button_state(True)
-        except Exception:
-            # stay silent in UI; decoding will simply be disabled
+        except Exception as exc:
+            # Show an error when a DBC cannot be parsed so the user knows why it failed.
             self.db = None
             if self.db_path_edit is not None:
                 self.db_path_edit.setText("")
             self._stop_csv_logging(reason="DBC load failed")
             self._update_csv_button_state(False)
+            self._show_dbc_load_error(path, exc)
 
     def _on_predefined_dbc_selected(self, index: int):
         if self.db_selector is None or index < 0:
@@ -544,6 +545,27 @@ class SignalWatch(QObject):
             txt = f"{val:.6f}".rstrip("0").rstrip(".")
             return txt if txt else "0"
         return str(val)
+
+    def _load_dbc_with_fallback(self, path: str):
+        """Load DBC with a permissive fallback for files that violate strict specs."""
+        try:
+            return cantools.database.load_file(path)
+        except Exception as strict_exc:
+            try:
+                return cantools.database.load_file(path, strict=False)
+            except Exception:
+                raise strict_exc
+
+    def _show_dbc_load_error(self, path: str, exc: Exception):
+        parent = self._container or self.parent()
+        try:
+            QMessageBox.warning(
+                parent,
+                "DBC load failed",
+                f"Could not load DBC:\n{path}\n\n{exc}",
+            )
+        except Exception:
+            pass
 
     def _update_csv_button_state(self, enabled: bool):
         if self.start_csv_btn is None:
