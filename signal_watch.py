@@ -57,12 +57,32 @@ class SignalWatch(QObject):
         self._csv_blink_timer.timeout.connect(self._blink_csv_button)
         self._csv_blink_state = False
         self._csv_btn_style_idle = (
-            "color: white; background-color: #2e8b57; padding: 4px 12px; "
-            "border-radius: 4px; font-weight: bold; border: 2px solid #1f5f3c;"
+            "QPushButton {"
+            "color: white; padding: 4px 12px; font-weight: bold; border-radius: 4px;"
+            "border: 2px solid #1f5f3c;"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #3fae72, stop:1 #2e8b57);"
+            "}"
+            "QPushButton:hover {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #56c685, stop:1 #319c62);"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2e8b57, stop:1 #1f5f3c);"
+            "border-top-color: #1f5f3c; border-bottom-color: #143823; padding-top: 6px; padding-bottom: 2px;"
+            "}"
         )
         self._csv_btn_style_blink = (
-            "color: white; background-color: #d00000; padding: 4px 12px; "
-            "border-radius: 4px; font-weight: bold; border: 2px solid #8b0000;"
+            "QPushButton {"
+            "color: white; padding: 4px 12px; font-weight: bold; border-radius: 4px;"
+            "border: 2px solid #8b0000;"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff4d4d, stop:1 #d00000);"
+            "}"
+            "QPushButton:hover {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff6666, stop:1 #e00000);"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #d00000, stop:1 #8b0000);"
+            "border-top-color: #8b0000; border-bottom-color: #5a0000; padding-top: 6px; padding-bottom: 2px;"
+            "}"
         )
         self.predefined_dbcs = {
             "Select DBC...": None,
@@ -95,8 +115,18 @@ class SignalWatch(QObject):
         control_height = 28
         load_btn = QPushButton("Load DBC...")
         load_btn.setStyleSheet(
-            "color: white; background-color: #c00000; padding: 4px 10px; "
-            "border-radius: 3px; font-weight: bold;"
+            "QPushButton {"
+            "color: white; padding: 4px 10px; font-weight: bold; border-radius: 4px;"
+            "border: 2px solid #7a0000;"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #d95c5c, stop:1 #b00000);"
+            "}"
+            "QPushButton:hover {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff6d6d, stop:1 #c00000);"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #b00000, stop:1 #7a0000);"
+            "border-top-color: #a00000; border-bottom-color: #500000; padding-top: 6px; padding-bottom: 2px;"
+            "}"
         )
         load_btn.setFixedHeight(control_height)
         load_btn.clicked.connect(self.load_dbc_dialog)
