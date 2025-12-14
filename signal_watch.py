@@ -1,8 +1,11 @@
 import cantools
+from pathlib import Path
 from PySide6.QtCore import QObject, Qt
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
+    QLabel,
+    QComboBox,
     QLineEdit,
     QPushButton,
     QTableWidget,
@@ -29,6 +32,15 @@ class SignalWatch(QObject):
         self.search_edit = None
         self.filter_text = ""
         self._container = None
+        self.db_selector = None
+        self._db_selector_default_style = ""
+        self.predefined_dbcs = {
+            "Select DBC...": None,
+            "Marvel DBC": Path(__file__).resolve().parent / "Marvel_3W_all_variant.dbc",
+            "nBMS DBC": None,
+            "CIP BMS-24X": None,
+            "ION BMS": None,
+        }
 
     def attach_ui(self, signal_tab_widget: QWidget):
         """Builds the Signal Watch UI inside the provided tab widget."""
@@ -48,11 +60,27 @@ class SignalWatch(QObject):
 
         controls = QHBoxLayout()
         load_btn = QPushButton("Load DBC...")
+        load_btn.setStyleSheet(
+            "color: white; background-color: #c00000; padding: 4px 10px; "
+            "border-radius: 3px; font-weight: bold;"
+        )
         load_btn.clicked.connect(self.load_dbc_dialog)
         self.db_path_edit = QLineEdit()
         self.db_path_edit.setReadOnly(True)
         controls.addWidget(load_btn)
         controls.addWidget(self.db_path_edit)
+        activate_label = QLabel("Activate DBC")
+        activate_label.setStyleSheet(
+            "color: white; background-color: #2e8b57; padding: 4px 8px; "
+            "border-radius: 4px; font-weight: bold;"
+        )
+        controls.addWidget(activate_label)
+        self.db_selector = QComboBox()
+        self._db_selector_default_style = self.db_selector.styleSheet() or ""
+        for name, path in self.predefined_dbcs.items():
+            self.db_selector.addItem(name, path)
+        self.db_selector.currentIndexChanged.connect(self._on_predefined_dbc_selected)
+        controls.addWidget(self.db_selector)
         controls.addStretch()
 
         self.search_edit = QLineEdit()
@@ -96,6 +124,24 @@ class SignalWatch(QObject):
             self.db = None
             if self.db_path_edit is not None:
                 self.db_path_edit.setText("")
+
+    def _on_predefined_dbc_selected(self, index: int):
+        if self.db_selector is None or index < 0:
+            return
+        path = self.db_selector.itemData(index)
+        if not path:
+            # Reset style when no predefined DBC is selected.
+            self.db_selector.setStyleSheet(self._db_selector_default_style)
+            return
+        self.db_selector.setStyleSheet(
+            "QComboBox { color: white; background-color: #1e90ff; font-weight: bold; }"
+        )
+        resolved = Path(path)
+        if resolved.is_file():
+            self.load_dbc(str(resolved))
+        else:
+            # Fallback for non-existent paths; keeps hook ready for future options.
+            self.load_dbc(str(path))
 
     def process_frame(self, msg, ts_us):
         if self.db is None or not self.tables:
