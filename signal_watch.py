@@ -313,7 +313,7 @@ class SignalWatch(QObject):
         if self.db is None:
             parent = self._container or self.parent()
             QMessageBox.warning(
-                parent, "DBC not selected", "Please Activate and select a DBC before logging."
+                parent, "DBC not selected", "Please Activate and select a DBC before logging CSV."
             )
             return
         if not self._hardware_connected():
