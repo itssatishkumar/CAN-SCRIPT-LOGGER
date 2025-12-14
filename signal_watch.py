@@ -2,14 +2,14 @@ import cantools
 import csv
 from datetime import datetime
 from pathlib import Path
-from PySide6.QtCore import QObject, Qt, Signal, QTimer
+from PySide6.QtCore import QObject, Qt, Signal, QTimer, QPoint
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
-    QLabel,
     QLineEdit,
     QMenu,
     QPushButton,
+    QWidgetAction,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -40,6 +40,7 @@ class SignalWatch(QObject):
         self.activate_dbc_btn = None
         self._activate_menu = None
         self._active_dbc_label = "Select DBC..."
+        self._custom_dbc_action_id = "__custom_dbc__"
         self.start_csv_btn = None
         self._csv_log_path = None
         self._csv_log_file = None
@@ -117,6 +118,9 @@ class SignalWatch(QObject):
             "Select DBC...": None,
             "Marvel DBC": Path(__file__).resolve().parent / "Marvel_3W_all_variant.dbc",
             "nBMS DBC": None,
+            "G2A DBC": Path(__file__).resolve().parent / "G2A nBMS.dbc",
+            "G2B DBC": Path(__file__).resolve().parent / "G2B_LR200 nBMS.dbc",
+            "Athena 4 or 5 DBC": Path(__file__).resolve().parent / "Athena 4&5.dbc",
             "CIP BMS-24X": None,
             "ION BMS": None,
             "GTAKE DBC": Path(__file__).resolve().parent / "GTAKE_MCU.dbc",
@@ -142,50 +146,29 @@ class SignalWatch(QObject):
 
         controls = QHBoxLayout()
         control_height = 28
-        load_btn = QPushButton("Load DBC...")
-        load_btn.setStyleSheet(
-            "QPushButton {"
-            "color: white; padding: 4px 10px; font-weight: bold; border-radius: 4px;"
-            "border: 2px solid #7a0000;"
-            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #d95c5c, stop:1 #b00000);"
-            "}"
-            "QPushButton:hover {"
-            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff6d6d, stop:1 #c00000);"
-            "}"
-            "QPushButton:pressed {"
-            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #b00000, stop:1 #7a0000);"
-            "border-top-color: #a00000; border-bottom-color: #500000; padding-top: 6px; padding-bottom: 2px;"
-            "}"
-        )
-        load_btn.setFixedHeight(control_height)
-        load_btn.clicked.connect(self.load_dbc_dialog)
-        self.db_path_edit = QLineEdit()
-        self.db_path_edit.setReadOnly(True)
-        self.db_path_edit.setFixedHeight(control_height)
-        controls.addWidget(load_btn)
-        controls.addWidget(self.db_path_edit)
         self.activate_dbc_btn = QPushButton("Activate DBC")
         self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_idle)
         self.activate_dbc_btn.setFixedHeight(control_height)
         self._active_dbc_label = "Select DBC..."
         self._activate_menu = QMenu(self.activate_dbc_btn)
-        for name, path in self.predefined_dbcs.items():
-            action = self._activate_menu.addAction(name)
-            action.setData(path)
+        self._build_activate_menu()
         self._activate_menu.triggered.connect(self._on_predefined_dbc_action)
         self.activate_dbc_btn.setMenu(self._activate_menu)
         controls.addWidget(self.activate_dbc_btn)
-
-        controls.addStretch()
-
+        self.db_path_edit = QLineEdit()
+        self.db_path_edit.setReadOnly(True)
+        self.db_path_edit.setFixedHeight(control_height)
+        controls.addWidget(self.db_path_edit)
         self.start_csv_btn = QPushButton("Start Logging")
         self.start_csv_btn.setStyleSheet(self._csv_btn_style_idle)
         self.start_csv_btn.setFixedHeight(control_height)
         self.start_csv_btn.clicked.connect(self._on_start_csv_clicked)
         controls.addWidget(self.start_csv_btn)
 
+        controls.addStretch()
+
         self.search_edit = QLineEdit()
-        self.search_edit.setPlaceholderText("Search signal…")
+        self.search_edit.setPlaceholderText("Search signal...")
         self.search_edit.textChanged.connect(self.apply_filter)
         self.search_edit.setFixedWidth(220)
         controls.addWidget(self.search_edit)
@@ -207,16 +190,10 @@ class SignalWatch(QObject):
         # Keep Start Logging clickable for user feedback even when no DBC is active.
         self._update_csv_button_state(False)
 
-    def load_dbc_dialog(self):
-        if self._container is None:
-            return
-        path, _ = QFileDialog.getOpenFileName(
-            self._container, "Select DBC File", "", "DBC Files (*.dbc)"
-        )
-        if path:
-            self.load_dbc(path)
-
     def load_dbc(self, path: str):
+        if self._csv_logging_active:
+            self._warn_stop_logging_before_switch()
+            return
         # reset CSV logging when switching databases to keep headers in sync
         self._stop_csv_logging(user_requested=True)
         try:
@@ -239,12 +216,40 @@ class SignalWatch(QObject):
             return
         path = action.data()
         name = action.text() or "Activate DBC"
+        self._handle_dbc_selection(path, name)
+
+    def _browse_and_activate_custom_dbc(self):
+        parent = self._container or self.parent()
+        path, _ = QFileDialog.getOpenFileName(
+            parent, "Select DBC File", "", "DBC Files (*.dbc)"
+        )
+        if not path:
+            return
+        name = Path(path).stem or "Custom DBC"
+        self._active_dbc_label = name
+        if self.activate_dbc_btn is not None:
+            self.activate_dbc_btn.setText(f"Activated: {name}")
+            self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_active)
+        self.load_dbc(path)
+        if self.db is None:
+            self._reset_activate_button()
+
+    def _reset_activate_button(self):
+        self._active_dbc_label = "Select DBC..."
+        if self.activate_dbc_btn is not None:
+            self.activate_dbc_btn.setText("Activate DBC")
+            self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_idle)
+
+    def _handle_dbc_selection(self, path, name: str):
+        if self._csv_logging_active:
+            self._warn_stop_logging_before_switch()
+            return
+        if path == self._custom_dbc_action_id:
+            self._browse_and_activate_custom_dbc()
+            return
         self._active_dbc_label = name
         if not path:
-            self._active_dbc_label = "Select DBC..."
-            if self.activate_dbc_btn is not None:
-                self.activate_dbc_btn.setText("Activate DBC")
-                self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_idle)
+            self._reset_activate_button()
             self._stop_csv_logging(user_requested=True)
             self._update_csv_button_state(False)
             return
@@ -252,10 +257,149 @@ class SignalWatch(QObject):
             self.activate_dbc_btn.setText(f"Activated: {name}")
             self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_active)
         resolved = Path(path)
-        if resolved.is_file():
-            self.load_dbc(str(resolved))
-        else:
-            self.load_dbc(str(path))
+        target = str(resolved) if resolved.is_file() else str(path)
+        self.load_dbc(target)
+        if self.db is None:
+            self._reset_activate_button()
+
+    def _warn_stop_logging_before_switch(self):
+        parent = self._container or self.parent()
+        try:
+            QMessageBox.warning(
+                parent,
+                "Stop logging first",
+                "Please stop logging before switching DBC.",
+            )
+        except Exception:
+            pass
+
+    def _build_activate_menu(self):
+        if self._activate_menu is None:
+            return
+        self._activate_menu.clear()
+        self._style_menu(self._activate_menu)
+
+        # nBMS submenu
+        nmbs_menu = QMenu(self._activate_menu)
+        self._style_menu(nmbs_menu)
+        nmbs_items = [
+            ("G2A DBC", self.predefined_dbcs.get("G2A DBC"), ("#e54735", "#b71c1c"), ("#f24542", "#c62828"), "#ffffff"),
+            ("G2B DBC", self.predefined_dbcs.get("G2B DBC"), ("#266e1f", "#0f3f12"), ("#258229", "#135016"), "#ffffff"),
+            ("Athena 4 or 5 DBC", self.predefined_dbcs.get("Athena 4 or 5 DBC"), ("#1f3dd1", "#0f4d8f"), ("#2596eb", "#135da3"), "#ffffff"),
+        ]
+        for label, path, grad, hover_grad, fg in nmbs_items:
+            self._add_menu_button_action(
+                nmbs_menu, label, grad, hover_grad, fg, data=path, menu_to_hide=nmbs_menu
+            )
+
+        menu_items = [
+            ("Select DBC...", self.predefined_dbcs.get("Select DBC..."), ("#177a8c", "#0c4a55"), ("#1b91a7", "#0f6a7e"), "#ffffff"),
+            ("Marvel DBC", self.predefined_dbcs.get("Marvel DBC"), ("#36bc47", "#1f7a2a"), ("#3fd658", "#249232"), "#ffffff"),
+            ("nBMS DBC", None, ("#79ce80", "#4e9f57"), ("#87dc8e", "#5cac65"), "#ffffff", nmbs_menu),
+            ("CIP BMS-24X", self.predefined_dbcs.get("CIP BMS-24X"), ("#f59a3f", "#c56a11"), ("#f7ad62", "#d17812"), "#ffffff"),
+            ("ION BMS", self.predefined_dbcs.get("ION BMS"), ("#7a5a22", "#4c3513"), ("#8a6a2b", "#5b4218"), "#ffffff"),
+            ("GTAKE DBC", self.predefined_dbcs.get("GTAKE DBC"), ("#b8e2ec", "#83c3d3"), ("#c6ebf3", "#8fcad8"), "#0b3b4a"),
+            ("Pegasus DBC", self.predefined_dbcs.get("Pegasus DBC"), ("#10acf3", "#0a7dbc"), ("#15bbff", "#0c8ed9"), "#ffffff"),
+            ("HEPU DBC", self.predefined_dbcs.get("HEPU DBC"), ("#8a1f1f", "#5c0f0f"), ("#9a2929", "#661212"), "#ffffff"),
+        ]
+        for item in menu_items:
+            label, path, grad, hover_grad, fg, *rest = item
+            submenu = rest[0] if rest else None
+            display_label = label if submenu is None else f"{label} ▸"
+            self._add_menu_button_action(
+                self._activate_menu,
+                display_label,
+                grad,
+                hover_grad,
+                fg,
+                data=path,
+                submenu=submenu,
+                menu_to_hide=self._activate_menu,
+            )
+
+        self._activate_menu.addSeparator()
+        self._add_menu_button_action(
+            self._activate_menu,
+            "Load DBC...",
+            ("#2a82c5", "#1a5c8e"),
+            ("#3296e0", "#1f6ca9"),
+            "#ffffff",
+            data=self._custom_dbc_action_id,
+            menu_to_hide=self._activate_menu,
+        )
+
+    def _add_menu_button_action(
+        self,
+        menu,
+        label: str,
+        gradient_colors,
+        hover_gradient_colors,
+        text_color: str,
+        data=None,
+        submenu: QMenu = None,
+        menu_to_hide: QMenu = None,
+    ):
+        btn = QPushButton(label)
+        btn.setFlat(True)
+        btn.setCursor(Qt.PointingHandCursor)
+        top, bottom = gradient_colors
+        hover_top, hover_bottom = hover_gradient_colors
+        btn.setStyleSheet(
+            "QPushButton {"
+            f"background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 {top}, stop:1 {bottom});"
+            f"color: {text_color};"
+            "font-weight: bold;"
+            "padding: 4px 10px;"
+            "border: 1px solid #0f172a;"
+            "border-top-color: rgba(255,255,255,0.35);"
+            "border-left-color: rgba(255,255,255,0.35);"
+            "border-bottom-color: rgba(0,0,0,0.3);"
+            "border-right-color: rgba(0,0,0,0.3);"
+            "border-radius: 2px;"
+            "text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            f"background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 {hover_top}, stop:1 {hover_bottom});"
+            "border-top-color: rgba(255,255,255,0.45);"
+            "border-left-color: rgba(255,255,255,0.45);"
+            "}"
+        )
+        action = QWidgetAction(menu)
+        action.setDefaultWidget(btn)
+        action.setData(data)
+
+        def _on_click():
+            if submenu is not None:
+                self._open_submenu(submenu, btn)
+                return
+            self._on_menu_button_clicked(data, label, menu_to_hide)
+
+        btn.clicked.connect(_on_click)
+        menu.addAction(action)
+
+    def _on_menu_button_clicked(self, data, label: str, menu_to_hide: QMenu = None):
+        if menu_to_hide is not None:
+            try:
+                menu_to_hide.hide()
+            except Exception:
+                pass
+        if self._activate_menu is not None:
+            try:
+                self._activate_menu.hide()
+            except Exception:
+                pass
+        self._handle_dbc_selection(data, label)
+
+    def _style_menu(self, menu: QMenu):
+        if menu is None:
+            return
+        menu.setStyleSheet("QMenu { border: 1px solid #9ca3af; padding: 2px; }")
+
+    def _open_submenu(self, submenu: QMenu, source_btn: QPushButton):
+        if submenu is None or source_btn is None:
+            return
+        pos = source_btn.mapToGlobal(source_btn.rect().topRight())
+        submenu.exec(pos)
 
     def process_frame(self, msg, ts_us):
         if self.db is None or not self.tables:
