@@ -40,6 +40,9 @@ class SignalWatch(QObject):
             "nBMS DBC": None,
             "CIP BMS-24X": None,
             "ION BMS": None,
+            "GTAKE DBC": Path(__file__).resolve().parent / "GTAKE_MCU.dbc",
+            "Pegasus DBC": Path(__file__).resolve().parent / "Pegasus_MCU_BMS.dbc",
+            "HEPU DBC": Path(__file__).resolve().parent / "HEPU_MCU.dbc",
         }
 
     def attach_ui(self, signal_tab_widget: QWidget):
