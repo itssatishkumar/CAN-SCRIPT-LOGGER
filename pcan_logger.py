@@ -1547,7 +1547,7 @@ class PCANViewClone(QMainWindow):
     # ----------------------------
     def ask_log_filename(self):
         if not self.is_connected:
-            QMessageBox.warning(self, "Not connected", "Please connect to PCAN device before starting logging.")
+            QMessageBox.warning(self, "Not connected", "Please connect to PCAN device before start logging.")
             return
         filename, _ = QFileDialog.getSaveFileName(self, "Save Log File", "", "TRC Files (*.trc)")
         if filename:
