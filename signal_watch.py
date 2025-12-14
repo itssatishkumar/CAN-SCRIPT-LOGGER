@@ -7,8 +7,8 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QLabel,
-    QComboBox,
     QLineEdit,
+    QMenu,
     QPushButton,
     QTableWidget,
     QTableWidgetItem,
@@ -37,8 +37,9 @@ class SignalWatch(QObject):
         self.search_edit = None
         self.filter_text = ""
         self._container = None
-        self.db_selector = None
-        self._db_selector_default_style = ""
+        self.activate_dbc_btn = None
+        self._activate_menu = None
+        self._active_dbc_label = "Select DBC..."
         self.start_csv_btn = None
         self._csv_log_path = None
         self._csv_log_file = None
@@ -82,6 +83,34 @@ class SignalWatch(QObject):
             "QPushButton:pressed {"
             "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #d00000, stop:1 #8b0000);"
             "border-top-color: #8b0000; border-bottom-color: #5a0000; padding-top: 6px; padding-bottom: 2px;"
+            "}"
+        )
+        self._activate_btn_style_idle = (
+            "QPushButton {"
+            "color: white; padding: 4px 12px; font-weight: bold; border-radius: 5px;"
+            "border: 2px solid #0c4da2;"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4da3ff, stop:1 #1c64d1);"
+            "}"
+            "QPushButton:hover {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #65b7ff, stop:1 #2b73dd);"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #1c64d1, stop:1 #0f3f8c);"
+            "border-top-color: #0f3f8c; border-bottom-color: #072a62; padding-top: 6px; padding-bottom: 2px;"
+            "}"
+        )
+        self._activate_btn_style_active = (
+            "QPushButton {"
+            "color: white; padding: 4px 12px; font-weight: bold; border-radius: 5px;"
+            "border: 2px solid #1f5f3c;"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #3fae72, stop:1 #2e8b57);"
+            "}"
+            "QPushButton:hover {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #56c685, stop:1 #319c62);"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2e8b57, stop:1 #1f5f3c);"
+            "border-top-color: #1f5f3c; border-bottom-color: #143823; padding-top: 6px; padding-bottom: 2px;"
             "}"
         )
         self.predefined_dbcs = {
@@ -135,20 +164,17 @@ class SignalWatch(QObject):
         self.db_path_edit.setFixedHeight(control_height)
         controls.addWidget(load_btn)
         controls.addWidget(self.db_path_edit)
-        activate_label = QLabel("Activate DBC")
-        activate_label.setStyleSheet(
-            "color: white; background-color: #2e8b57; padding: 4px 8px; "
-            "border-radius: 4px; font-weight: bold;"
-        )
-        activate_label.setFixedHeight(control_height)
-        controls.addWidget(activate_label)
-        self.db_selector = QComboBox()
-        self._db_selector_default_style = self.db_selector.styleSheet() or ""
+        self.activate_dbc_btn = QPushButton("Activate DBC")
+        self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_idle)
+        self.activate_dbc_btn.setFixedHeight(control_height)
+        self._active_dbc_label = "Select DBC..."
+        self._activate_menu = QMenu(self.activate_dbc_btn)
         for name, path in self.predefined_dbcs.items():
-            self.db_selector.addItem(name, path)
-        self.db_selector.currentIndexChanged.connect(self._on_predefined_dbc_selected)
-        self.db_selector.setFixedHeight(control_height)
-        controls.addWidget(self.db_selector)
+            action = self._activate_menu.addAction(name)
+            action.setData(path)
+        self._activate_menu.triggered.connect(self._on_predefined_dbc_action)
+        self.activate_dbc_btn.setMenu(self._activate_menu)
+        controls.addWidget(self.activate_dbc_btn)
 
         controls.addStretch()
 
@@ -208,24 +234,27 @@ class SignalWatch(QObject):
             self._update_csv_button_state(False)
             self._show_dbc_load_error(path, exc)
 
-    def _on_predefined_dbc_selected(self, index: int):
-        if self.db_selector is None or index < 0:
+    def _on_predefined_dbc_action(self, action):
+        if action is None:
             return
-        path = self.db_selector.itemData(index)
+        path = action.data()
+        name = action.text() or "Activate DBC"
+        self._active_dbc_label = name
         if not path:
-            # Reset style when no predefined DBC is selected.
-            self.db_selector.setStyleSheet(self._db_selector_default_style)
+            self._active_dbc_label = "Select DBC..."
+            if self.activate_dbc_btn is not None:
+                self.activate_dbc_btn.setText("Activate DBC")
+                self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_idle)
             self._stop_csv_logging(user_requested=True)
             self._update_csv_button_state(False)
             return
-        self.db_selector.setStyleSheet(
-            "QComboBox { color: white; background-color: #1e90ff; font-weight: bold; }"
-        )
+        if self.activate_dbc_btn is not None:
+            self.activate_dbc_btn.setText(f"Activated: {name}")
+            self.activate_dbc_btn.setStyleSheet(self._activate_btn_style_active)
         resolved = Path(path)
         if resolved.is_file():
             self.load_dbc(str(resolved))
         else:
-            # Fallback for non-existent paths; keeps hook ready for future options.
             self.load_dbc(str(path))
 
     def process_frame(self, msg, ts_us):
@@ -443,8 +472,8 @@ class SignalWatch(QObject):
         dbc_name = ""
         if self.db_path_edit is not None and self.db_path_edit.text():
             dbc_name = Path(self.db_path_edit.text()).stem
-        elif self.db_selector is not None and self.db_selector.currentText():
-            dbc_name = self.db_selector.currentText().replace(" ", "_")
+        elif self._active_dbc_label and self._active_dbc_label != "Select DBC...":
+            dbc_name = self._active_dbc_label.replace(" ", "_")
         base = dbc_name or "signals"
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         return str((default_dir / f"{base}_csv_{timestamp}.csv").resolve())
