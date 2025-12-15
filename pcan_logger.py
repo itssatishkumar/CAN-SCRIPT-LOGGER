@@ -37,6 +37,8 @@ import csv
 import os
 import datetime
 import threading
+import subprocess
+from pathlib import Path
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -638,9 +640,9 @@ class PCANViewClone(QMainWindow):
         self.mcu_logger = None
         self.mcu_logging_enabled = False
         self.mcu_variant_map = {
-            0x05: ("GTAKE", "MCU_DBC/GTAKE_MCU.dbc"),
-            0x01: ("GTAKE", "MCU_DBC/GTAKE_MCU.dbc"),
-            0x03: ("Pegasus", "MCU_DBC/Pegasus_MCU_BMS.dbc"),
+            0x05: ("GTAKE", "GTAKE_MCU.dbc"),
+            0x01: ("GTAKE", "GTAKE_MCU.dbc"),
+            0x03: ("Pegasus", "Pegasus_MCU_BMS.dbc"),
         }
 
         # track connection start used for non-recording trace timestamps
@@ -701,6 +703,29 @@ class PCANViewClone(QMainWindow):
 
         self.signal_watch = SignalWatch(self)
         self.signal_watch.attach_ui(self.signal_tab)
+
+        self.service_tab = QWidget()
+        service_layout = QVBoxLayout()
+        service_btn = QPushButton("Service Mode")
+        service_btn.setStyleSheet(
+            "QPushButton {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4da3ff, stop:1 #1c64d1);"
+            "color: white; font-weight: bold; padding: 8px 14px; border-radius: 5px;"
+            "border: 2px solid #0c4da2;"
+            "}"
+            "QPushButton:hover {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #65b7ff, stop:1 #2b73dd);"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #1c64d1, stop:1 #0f3f8c);"
+            "border-top-color: #0f3f8c; border-bottom-color: #072a62; padding-top: 10px; padding-bottom: 6px;"
+            "}"
+        )
+        service_btn.clicked.connect(self._launch_service_mode)
+        service_layout.addWidget(service_btn)
+        service_layout.addStretch()
+        self.service_tab.setLayout(service_layout)
+        self.tabs.addTab(self.service_tab, "Service Mode")
 
         # Status bar (unchanged)
         self.status_bar = QStatusBar()
@@ -1766,6 +1791,19 @@ class PCANViewClone(QMainWindow):
         else:
             self.status_bus.setStyleSheet("color: black; font-weight: normal;")
             self._blink_timer.stop()
+
+    # ----------------------------
+    # Launch external Service Mode tool
+    # ----------------------------
+    def _launch_service_mode(self):
+        script_path = Path(__file__).resolve().parent / "Service_Mode.py"
+        if not script_path.exists():
+            QMessageBox.warning(self, "Service Mode missing", f"Service_Mode.py not found:\n{script_path}")
+            return
+        try:
+            subprocess.Popen([sys.executable, str(script_path)])
+        except Exception as exc:
+            QMessageBox.warning(self, "Service Mode failed", f"Could not start Service Mode:\n{exc}")
 
     # ----------------------------
     # Small helper to switch to Trace tab (was missing and caused AttributeError)
