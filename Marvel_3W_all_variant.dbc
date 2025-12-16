@@ -405,8 +405,11 @@ BO_ 1954 Short_Circuit_Detect: 8 Vector__XXX
 
 VAL_ 1954 SCD_Fla  0 "NA" 1 "Active" ;
 
-BO_ 302 IR_PARAM_1: 8 Vector__XXX
+BO_ 302 IR_PARAM_SoC_K_Factor: 8 Vector__XXX
  SG_ IR_Value : 0|32@1+ (10000,0) [0|0] "" Vector__XXX
+ SG_ Filter_temp : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Min_Temp    : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ K_Factor    : 48|8@1+ (1,0) [0|255] "%" Vector__XXX
 
 BO_ 342 BC_Dynamic_inst: 8 Vector__XXX
  SG_ dynamicLimitOut_Inst : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
