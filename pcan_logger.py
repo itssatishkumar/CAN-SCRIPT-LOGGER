@@ -3,6 +3,7 @@ import time
 from collections import deque
 from ctypes import c_ubyte
 from parse_tool import trc_to_csv, parse_log_to_compact_csv
+from can_mirror import CANMirrorEngine
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QTableWidget, QTableWidgetItem,
     QVBoxLayout, QWidget, QSplitter, QStatusBar, QLabel,
@@ -603,6 +604,9 @@ class PCANViewClone(QMainWindow):
         # PCAN instance
         self.pcan = PCANBasic()
 
+        # Mirror engine (external script)
+        self.mirror_engine = CANMirrorEngine(self.pcan, CAN_CHANNEL)
+
         # Reader thread
         self.reader = None
 
@@ -1047,6 +1051,7 @@ class PCANViewClone(QMainWindow):
 
         menu = QMenu(self.transmit_table)
         edit_action = menu.addAction("Edit Message")
+        mirror_action = menu.addAction("Mirror CAN ID Data Byte")
         menu.addSeparator()
         id_menu = menu.addMenu("CAN ID Format")
         id_hex = id_menu.addAction("Hexadecimal")
@@ -1071,6 +1076,8 @@ class PCANViewClone(QMainWindow):
         action = menu.exec_(self.transmit_table.viewport().mapToGlobal(pos))
         if action == edit_action:
             self._edit_transmit_row(row)
+        elif action == mirror_action:
+            self._open_mirror_dialog()
         elif action == id_hex:
             self.row_id_format_tx[row] = "hex"
         elif action == id_dec:
@@ -1084,6 +1091,60 @@ class PCANViewClone(QMainWindow):
 
         if action:
             self.refresh_single_tx_row(row)
+
+    def _open_mirror_dialog(self):
+        if not self.live_data:
+            QMessageBox.warning(self, "No RX", "No received CAN IDs to mirror.")
+            return
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Mirror CAN ID Data Byte")
+
+        layout = QGridLayout(dlg)
+
+        layout.addWidget(QLabel("RX CAN ID:"), 0, 0)
+        rx_combo = QComboBox()
+        rx_combo.addItems([f"{cid:X}" for cid in self.live_data.keys()])
+        layout.addWidget(rx_combo, 0, 1)
+
+        layout.addWidget(QLabel("TX CAN ID (hex):"), 1, 0)
+        tx_edit = QLineEdit()
+        layout.addWidget(tx_edit, 1, 1)
+
+        layout.addWidget(QLabel("Interval (ms):"), 2, 0)
+        interval_edit = QLineEdit("0")
+        layout.addWidget(interval_edit, 2, 1)
+
+        ext_chk = QCheckBox("Extended Frame")
+        layout.addWidget(ext_chk, 3, 1)
+
+        btns = QHBoxLayout()
+        ok = QPushButton("OK")
+        cancel = QPushButton("Cancel")
+        btns.addWidget(ok)
+        btns.addWidget(cancel)
+        layout.addLayout(btns, 4, 0, 1, 2)
+
+        ok.clicked.connect(dlg.accept)
+        cancel.clicked.connect(dlg.reject)
+
+        if dlg.exec_() != QDialog.Accepted:
+            return
+
+        try:
+            rx_id = int(rx_combo.currentText(), 16)
+            tx_id = int(tx_edit.text(), 16)
+            interval = int(interval_edit.text())
+        except ValueError:
+            QMessageBox.warning(self, "Invalid Input", "Invalid CAN ID or interval.")
+            return
+
+        self.mirror_engine.add_rule(
+            rx_id=rx_id,
+            tx_id=tx_id,
+            extended=ext_chk.isChecked(),
+            interval_ms=interval
+        )
 
     def _edit_transmit_row(self, row: int):
         # Gather current values respecting the row's format selection
@@ -1309,6 +1370,7 @@ class PCANViewClone(QMainWindow):
     def process_message(self, msg, ts_us):
         # update timestamp sync anchor so Tx logging can share a stable clock
         self._log_timestamp_us(ts_us)
+        self.mirror_engine.handle_rx(msg)
 
         # Keep the same live-data update logic
         can_id = msg.ID
