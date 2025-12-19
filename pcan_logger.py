@@ -1712,9 +1712,8 @@ class PCANViewClone(QMainWindow):
             self.logging = True
             self.log_start_btn.setEnabled(False)
             self.log_stop_btn.setEnabled(True)
-            self.status_bus.setText("Logging: ON")
+            self.status_bus.setText(f"Logging: {os.path.basename(filename)}")
             self.status_bus.setStyleSheet("color: red; font-weight: bold;")
-
 
             self._blink_state = True
             self._blink_timer.start(500)
