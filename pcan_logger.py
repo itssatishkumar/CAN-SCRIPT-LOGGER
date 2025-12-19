@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QProgressDialog
 )
 from PySide6.QtCore import Qt, QThread, Signal, QTimer, QPoint, QObject
+from Tx_History import TxHistory
 
 # ----------------------------
 # Import PCANBasic module
@@ -600,12 +601,14 @@ class PCANViewClone(QMainWindow):
         super().__init__()
         self.setWindowTitle("PCAN-View (Logger & DebugTools)")
         self.resize(1300, 630)
+        self.tx_history = TxHistory()
 
         # PCAN instance
         self.pcan = PCANBasic()
 
         # Mirror engine (external script)
         self.mirror_engine = CANMirrorEngine(self.pcan, CAN_CHANNEL)
+        self.mirror_engine.on_tx = self._on_mirror_tx
 
         # Reader thread
         self.reader = None
@@ -622,6 +625,7 @@ class PCANViewClone(QMainWindow):
         self.current_log_filename = None
         self.header_written = False
         self.signal_watch = None
+       
         # per-row format tracking
         self.row_id_format_rx = {}
         self.row_id_format_tx = {}
@@ -647,6 +651,7 @@ class PCANViewClone(QMainWindow):
             0x05: ("GTAKE", "GTAKE_MCU.dbc"),
             0x01: ("GTAKE", "GTAKE_MCU.dbc"),
             0x03: ("Pegasus", "Pegasus_MCU_BMS.dbc"),
+            0x04: ("Pegasus", "Pegasus_MCU_BMS.dbc"),
         }
 
         # track connection start used for non-recording trace timestamps
@@ -694,6 +699,7 @@ class PCANViewClone(QMainWindow):
         self.recv_tx_tab = QWidget()
         self.setup_recv_tx_tab()
         self.tabs.addTab(self.recv_tx_tab, "Receive / Transmit")
+        self.tx_history.load(self)
 
         self.trace_tab = QWidget()
         self.setup_trace_tab()
@@ -735,11 +741,16 @@ class PCANViewClone(QMainWindow):
         self.status_bar = QStatusBar()
         self.status_conn = QLabel("Disconnected")
         self.status_bitrate = QLabel("Bit rate: ---")
-        self.status_bus = QLabel("Status: ---")
+        self.status_bus = QLabel("Logging: OFF")
+        self.status_mirror = QLabel("Mirror: ---")
+
         self.status_bar.addWidget(self.status_conn)
         self.status_bar.addWidget(self.status_bitrate)
         self.status_bar.addWidget(self.status_bus)
+        self.status_bar.addWidget(self.status_mirror)
+
         self.setStatusBar(self.status_bar)
+
 
         # Parse tool button (unchanged)
         self.parse_toolbutton = QToolButton()
@@ -1051,6 +1062,7 @@ class PCANViewClone(QMainWindow):
 
         menu = QMenu(self.transmit_table)
         edit_action = menu.addAction("Edit Message")
+        delete_action = menu.addAction("Delete Message")
         mirror_action = menu.addAction("Mirror CAN ID Data Byte")
         menu.addSeparator()
         id_menu = menu.addMenu("CAN ID Format")
@@ -1076,6 +1088,9 @@ class PCANViewClone(QMainWindow):
         action = menu.exec_(self.transmit_table.viewport().mapToGlobal(pos))
         if action == edit_action:
             self._edit_transmit_row(row)
+        elif action == delete_action:
+            self.transmit_table.removeRow(row)
+            self._reindex_tx_row_maps(row)
         elif action == mirror_action:
             self._open_mirror_dialog()
         elif action == id_hex:
@@ -1145,6 +1160,12 @@ class PCANViewClone(QMainWindow):
             extended=ext_chk.isChecked(),
             interval_ms=interval
         )
+        self.status_mirror.setText(
+            f"RX 0x{rx_id:X} → TX 0x{tx_id:X}"
+        )
+        self.status_mirror.setStyleSheet("color: green; font-weight: bold;")
+
+
 
     def _edit_transmit_row(self, row: int):
         # Gather current values respecting the row's format selection
@@ -1440,6 +1461,29 @@ class PCANViewClone(QMainWindow):
         if self.signal_watch:
             self.signal_watch.process_frame(msg, ts_us)
 
+    def _on_mirror_tx(self, msg):
+            ts_us = self._log_timestamp_us()
+
+            data = ' '.join(f"{b:02X}" for b in msg.DATA[:msg.LEN])
+
+            if self.recording_start_time is not None:
+                t = time.time() - self.recording_start_time
+            elif self.connection_start_time is not None:
+                t = time.time() - self.connection_start_time
+            else:
+                t = ts_us / 1_000_000.0 
+            self._pending_trace.append([
+                f"{t:.4f}",
+                f"{msg.ID:04X}",
+                "Tx(M)",
+                str(msg.LEN),
+                data
+            ])
+
+            if self.logging:
+                self.message_count += 1
+                self.write_trc_entry(self.message_count, ts_us, msg, tx=True)
+
     def _flush_pending_trace(self):
         """
         Flushes up to TRACE_ROWS_PER_FLUSH pending rows to the trace_table.
@@ -1668,7 +1712,9 @@ class PCANViewClone(QMainWindow):
             self.logging = True
             self.log_start_btn.setEnabled(False)
             self.log_stop_btn.setEnabled(True)
-            self.status_bus.setText(f"Logging Started: {filename}")
+            self.status_bus.setText("Logging: ON")
+            self.status_bus.setStyleSheet("color: red; font-weight: bold;")
+
 
             self._blink_state = True
             self._blink_timer.start(500)
@@ -1716,8 +1762,9 @@ class PCANViewClone(QMainWindow):
         self.logging = False
         self._blink_timer.stop()
         self.status_bus.setStyleSheet("color: black;")
-        self.status_bus.setText("Logging Stopped")
-        self.recording_start_time = None
+        self.status_bus.setText("Logging: OFF")
+        self.status_bus.setStyleSheet("color: black;")
+        
         if self.log_handler:
             try:
                 self.log_handler.close()
@@ -1783,29 +1830,12 @@ class PCANViewClone(QMainWindow):
             f";---+--   ----+----  --+--  ----+---  +  -+ -- -- -- -- -- -- --\n"
         )
 
-    def _monotonic_us(self):
-        return time.monotonic_ns() // 1000
-
-    def _log_timestamp_us(self, driver_ts_us=None):
-        """
-        Map driver timestamps to a single monotonic clock so Rx/Tx share the same base.
-        """
-        mono_us = self._monotonic_us()
-        if driver_ts_us is not None:
-            if self._log_ts_offset_us is None:
-                self._log_ts_offset_us = mono_us - driver_ts_us
-            return driver_ts_us + (self._log_ts_offset_us or 0)
-        return mono_us
-
     def write_trc_entry(self, msg_num, ts_us, msg, tx=False):
         if not self.log_handler:
             return
 
-        # fallback to unified monotonic clock if no timestamp is provided
         if ts_us is None:
             ts_us = self._log_timestamp_us()
-
-        # 1. FORCE ROTATION BEFORE WRITING
         rotated = False
         try:
             if os.path.getsize(self.log_handler.log_file.name) >= self.log_handler.max_size:
@@ -1813,27 +1843,26 @@ class PCANViewClone(QMainWindow):
                 rotated = True
         except Exception:
             pass
-
-        # Reset numbering/time base for the first frame in a rotated file
         if rotated:
             self.message_count = 1
             msg_num = 1
             self.log_base_ts_us = None
 
-        # establish base timestamp once per file
         if self.log_base_ts_us is None:
             self.log_base_ts_us = ts_us
 
-        # 2. Continue as usual
         direction = "Tx" if tx else "Rx"
         data_str = " ".join(f"{b:02X}" for b in msg.DATA[:msg.LEN])
         offset_ms = (ts_us - self.log_base_ts_us) / 1000.0
 
-        self.log_handler.write(
-            f"{msg_num:6}){offset_ms:11.1f}  {direction:<3}        "
-            f"{msg.ID:04X}  {msg.LEN}  {data_str}\n"
-        )
+        is_extended = bool(msg.MSGTYPE & 0x02)
+        can_id = f"{msg.ID:08X}" if is_extended else f"{msg.ID:04X}"
+        can_id_field = f"{can_id:>11}"
 
+        self.log_handler.write(
+            f"{msg_num:6}){offset_ms:11.1f}  {direction:<3}  "
+            f"{can_id_field}  {msg.LEN}  {data_str}\n"
+        )
     # ----------------------------
     # Blink status text
     # ----------------------------
@@ -1872,7 +1901,20 @@ class PCANViewClone(QMainWindow):
     # ----------------------------
     def switch_to_trace_tab(self):
         self.tabs.setCurrentWidget(self.trace_tab)
+    def _log_timestamp_us(self, ts_us=None):
+        if ts_us is not None:
+            if self._log_ts_offset_us is None:
+                self._log_ts_offset_us = int(time.time() * 1_000_000) - ts_us
+            return ts_us + self._log_ts_offset_us
 
+        return int(time.time() * 1_000_000)
+
+    def closeEvent(self, event):
+        try:
+            self.tx_history.save(self)
+        except Exception:
+            pass
+        event.accept()
 
 if __name__ == "__main__":
     try:
