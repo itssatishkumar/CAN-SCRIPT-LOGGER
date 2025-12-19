@@ -6,7 +6,8 @@ class CANMirrorEngine:
     def __init__(self, pcan, channel):
         self.pcan = pcan
         self.channel = channel
-        self.rules = {}  # rx_id -> rule
+        self.rules = {}
+        self.on_tx = None    
 
     def add_rule(self, rx_id, tx_id, extended=False, interval_ms=0):
         self.rules[rx_id] = {
@@ -43,5 +44,10 @@ class CANMirrorEngine:
             else PCAN_MESSAGE_STANDARD
         )
 
-        if self.pcan.Write(self.channel, tx) == PCAN_ERROR_OK:
+        result = self.pcan.Write(self.channel, tx)
+        if result == PCAN_ERROR_OK:
             rule["last_sent"] = now
+
+            # 🔴 CRITICAL: notify main app about mirror TX
+            if self.on_tx:
+                self.on_tx(tx)
