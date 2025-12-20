@@ -1108,9 +1108,10 @@ class PCANViewClone(QMainWindow):
             self.refresh_single_tx_row(row)
 
     def _open_mirror_dialog(self):
-        if not self.live_data:
+        if not self.mirror_engine.last_rx_data:
             QMessageBox.warning(self, "No RX", "No received CAN IDs to mirror.")
             return
+
 
         dlg = QDialog(self)
         dlg.setWindowTitle("Mirror CAN ID Data Byte")
@@ -1119,7 +1120,7 @@ class PCANViewClone(QMainWindow):
 
         layout.addWidget(QLabel("RX CAN ID:"), 0, 0)
         rx_combo = QComboBox()
-        rx_combo.addItems([f"{cid:X}" for cid in self.live_data.keys()])
+        rx_combo.addItems([f"{cid:X}" for cid in self.mirror_engine.last_rx_data.keys()])
         layout.addWidget(rx_combo, 0, 1)
 
         layout.addWidget(QLabel("TX CAN ID (hex):"), 1, 0)
@@ -1132,16 +1133,59 @@ class PCANViewClone(QMainWindow):
 
         ext_chk = QCheckBox("Extended Frame")
         layout.addWidget(ext_chk, 3, 1)
+        # -------------------------------------------------
+        # Byte offset controls (driven by CAN_Mirror.py)
+        # -------------------------------------------------
+        byte_controls = []
+
+        byte_frame = QFrame(dlg)
+        byte_layout = QGridLayout(byte_frame)
+
+        byte_layout.addWidget(QLabel("Byte"), 0, 0)
+        byte_layout.addWidget(QLabel("RX Value"), 0, 1)
+        byte_layout.addWidget(QLabel("Offset"), 0, 2)
+        byte_layout.addWidget(QLabel("Enable"), 0, 3)
+
+        for i in range(8):
+            lbl = QLabel(str(i))
+            val = QLineEdit("00")
+            val.setReadOnly(True)
+            off = QLineEdit("0")
+            chk = QCheckBox()   
+            byte_layout.addWidget(lbl, i + 1, 0)
+            byte_layout.addWidget(val, i + 1, 1)
+            byte_layout.addWidget(off, i + 1, 2)
+            byte_layout.addWidget(chk, i + 1, 3)
+
+            byte_controls.append((val, off, chk))
+
+        layout.addWidget(byte_frame, 4, 0, 1, 2)
 
         btns = QHBoxLayout()
         ok = QPushButton("OK")
         cancel = QPushButton("Cancel")
         btns.addWidget(ok)
         btns.addWidget(cancel)
-        layout.addLayout(btns, 4, 0, 1, 2)
+        layout.addLayout(btns, 5, 0, 1, 2)
+
+        # -----------------------------
+        # Update RX bytes when RX ID changes
+        # -----------------------------
+        def update_rx_bytes():
+            try:
+                rx_id = int(rx_combo.currentText(), 16)
+            except Exception:
+                return
+            data = self.mirror_engine.get_rx_bytes(rx_id)
+            for i, (val_edit, _, _) in enumerate(byte_controls):
+                val_edit.setText(f"{data[i]:02X}")
+
+        rx_combo.currentIndexChanged.connect(update_rx_bytes)
+        update_rx_bytes()
 
         ok.clicked.connect(dlg.accept)
         cancel.clicked.connect(dlg.reject)
+
 
         if dlg.exec_() != QDialog.Accepted:
             return
@@ -1154,12 +1198,34 @@ class PCANViewClone(QMainWindow):
             QMessageBox.warning(self, "Invalid Input", "Invalid CAN ID or interval.")
             return
 
+        byte_rules = []
+
+        for idx, (_, off_edit, chk) in enumerate(byte_controls):
+            if chk.isChecked():
+                try:
+                    offset = int(off_edit.text())
+                except ValueError:
+                    QMessageBox.warning(
+                        self,
+                        "Invalid Offset",
+                        f"Invalid offset value at byte {idx}"
+                    )
+                    return
+
+                byte_rules.append({
+                    "index": idx,
+                    "mode": "offset",
+                    "value": offset
+                })
+
         self.mirror_engine.add_rule(
             rx_id=rx_id,
             tx_id=tx_id,
             extended=ext_chk.isChecked(),
-            interval_ms=interval
+            interval_ms=interval,
+            byte_rules=byte_rules
         )
+        
         self.status_mirror.setText(
             f"RX 0x{rx_id:X} → TX 0x{tx_id:X}"
         )
