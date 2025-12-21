@@ -49,7 +49,6 @@ class CANMirrorEngine:
     # RX data access for UI (IMPORTANT)
     # ------------------------------------------------------------------
     def get_rx_bytes(self, rx_id):
-
         data = self.last_rx_data.get(rx_id, [])
         out = list(data[:8])
         while len(out) < 8:
@@ -87,7 +86,7 @@ class CANMirrorEngine:
         data = rx_data.copy()
 
         # --------------------------------------------------------------
-        # APPLY BYTE RULES (OFFSET / BUFFER)
+        # APPLY BYTE RULES (OFFSET / REPLACE)
         # --------------------------------------------------------------
         for br in rule.get("byte_rules", []):
             try:
@@ -100,12 +99,28 @@ class CANMirrorEngine:
             if not (0 <= idx < len(data)):
                 continue
 
+            # -------- SAFE OFFSET LOGIC --------
             if mode == "offset":
-                data[idx] = (data[idx] + val) & 0xFF
+                original = data[idx]
+
+                # Absolute zero → no offset
+                if original == 0:
+                    continue
+
+                new_val = original + val
+
+                # Clamp at zero
+                if new_val < 0:
+                    new_val = 0
+
+                # Clamp at 255 (extra safety)
+                if new_val > 255:
+                    new_val = 255
+
+                data[idx] = new_val
 
             elif mode == "replace":
                 data[idx] = val & 0xFF
-
 
         # Pad to 8 bytes
         tx.DATA = (c_ubyte * 8)(*data + [0] * (8 - len(data)))
