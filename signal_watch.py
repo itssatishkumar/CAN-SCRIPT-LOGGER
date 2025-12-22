@@ -20,10 +20,6 @@ from PySide6.QtWidgets import (
 
 
 class SignalWatch(QObject):
-    """
-    Decodes CAN frames using a loaded DBC and shows live signal values.
-    All decoding is kept here to avoid touching pcan_logger.py logic.
-    """
 
     csv_logging_requested = Signal()
 
@@ -115,14 +111,13 @@ class SignalWatch(QObject):
             "}"
         )
         self.predefined_dbcs = {
-            "Select DBC...": None,
             "Marvel DBC": Path(__file__).resolve().parent / "Marvel_3W_all_variant.dbc",
             "nBMS DBC": None,
             "G2A DBC": Path(__file__).resolve().parent / "G2A nBMS.dbc",
             "G2B DBC": Path(__file__).resolve().parent / "G2B_LR200 nBMS.dbc",
             "Athena 4 or 5 DBC": Path(__file__).resolve().parent / "Athena 4&5.dbc",
-            "CIP BMS-24X": None,
-            "ION BMS": None,
+            "CIP BMS-24X": Path(__file__).resolve().parent / "CIP BMS-24X.dbc",
+            "ION BMS": Path(__file__).resolve().parent / "ION_BMS.dbc",
             "GTAKE DBC": Path(__file__).resolve().parent / "GTAKE_MCU.dbc",
             "Pegasus DBC": Path(__file__).resolve().parent / "Pegasus_MCU_BMS.dbc",
             "HEPU DBC": Path(__file__).resolve().parent / "HEPU_MCU.dbc",
@@ -293,7 +288,6 @@ class SignalWatch(QObject):
             )
 
         menu_items = [
-            ("Select DBC...", self.predefined_dbcs.get("Select DBC..."), ("#177a8c", "#0c4a55"), ("#1b91a7", "#0f6a7e"), "#ffffff"),
             ("Marvel DBC", self.predefined_dbcs.get("Marvel DBC"), ("#36bc47", "#1f7a2a"), ("#3fd658", "#249232"), "#ffffff"),
             ("nBMS DBC", None, ("#79ce80", "#4e9f57"), ("#87dc8e", "#5cac65"), "#ffffff", nmbs_menu),
             ("CIP BMS-24X", self.predefined_dbcs.get("CIP BMS-24X"), ("#f59a3f", "#c56a11"), ("#f7ad62", "#d17812"), "#ffffff"),
@@ -450,9 +444,6 @@ class SignalWatch(QObject):
         self.row_map[key] = (table_idx, row)
         self._apply_filter_to_row(table, row)
 
-    # ----------------------------
-    # CSV logging
-    # ----------------------------
     def _on_start_csv_clicked(self):
         if self.db is None:
             parent = self._container or self.parent()
