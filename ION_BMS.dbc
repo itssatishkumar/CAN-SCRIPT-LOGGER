@@ -1,0 +1,161 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ New_Signal_64 : 0|24@0+ (1,0) [0|16777215] "" Vector__XXX
+ SG_ Thermistor_2 : 0|16@1+ (0.1,0) [0|6553.5] "Deg Cel" Vector__XXX
+ SG_ Thermistor_1 : 0|16@1+ (0.1,0) [0|6553.5] "Deg Cel" Vector__XXX
+
+BO_ 285 Balancing_Bit_Mask: 3 Vector__XXX
+ SG_ Balancing_Mask_Indication : 0|24@1+ (1,0) [0|16777215] "" Vector__XXX
+
+BO_ 284 Battery_Capacity_Info: 8 Vector__XXX
+ SG_ Full_Pack_Capacity : 16|16@1+ (0.1,0) [0|6553.5] "Ah" Vector__XXX
+
+BO_ 264 Public_Charger_Requirement_Limit: 8 Vector__XXX
+ SG_ Max_Allowed_Current : 48|16@1+ (1,0) [0|65535] "A" Vector__XXX
+ SG_ Max_Allowed_Cell_Temp : 32|16@1+ (1,0) [0|65535] "Deg Cel" Vector__XXX
+ SG_ Max_Allowed_Pack_Volatge : 16|16@1+ (1,0) [0|65535] "V" Vector__XXX
+ SG_ Max_Allowed_Cell_Voltage : 0|16@1+ (1,0) [0|65535] "mV" Vector__XXX
+
+BO_ 290 Temperature_Info_2: 4 Vector__XXX
+ SG_ Available_Discharge_Energy : 16|16@1+ (1,0) [0|65535] "Wh" Vector__XXX
+ SG_ Thermistor_5 : 0|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+
+BO_ 274 Temperature_Info_1: 8 Vector__XXX
+ SG_ Thermistor_4 : 48|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+ SG_ Thermistor_3 : 32|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+ SG_ Thermistor_2 : 16|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+ SG_ Thermistor_1 : 0|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+
+BO_ 298 Batt_param_3: 7 Vector__XXX
+ SG_ Config_Version : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ FW_Version : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ Derated_Discharge_Current : 16|16@1+ (0.1,0) [0|655.35] "A" Vector__XXX
+ SG_ Derated_Charge_Current : 0|16@1+ (0.1,0) [0|655.35] "A" Vector__XXX
+
+BO_ 280 Cell_Voltage_Info_6: 4 Vector__XXX
+ SG_ Cell_Voltage_20 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_19 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+BO_ 279 Cell_Voltage_Info_5: 8 Vector__XXX
+ SG_ Cell_Voltage_15 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_18 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_17 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_16 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+BO_ 278 Cell_Voltage_Info_4: 8 Vector__XXX
+ SG_ Cell_Voltage_14 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_13 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_12 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_11 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+BO_ 277 Cell_Voltage_Info_3: 4 Vector__XXX
+ SG_ Cell_Voltage_9 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_10 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+BO_ 276 Cell_Voltage_Info_2: 8 Vector__XXX
+ SG_ Cell_Voltage_8 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_7 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_6 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_5 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+BO_ 275 Cell_Voltage_Info_1: 8 Vector__XXX
+ SG_ Cell_Voltage_4 : 48|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_3 : 32|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_2 : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Cell_Voltage_1 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+
+BO_ 272 Batt_Param_2: 8 Vector__XXX
+ SG_ Pack_Current : 32|32@1- (0.01,0) [-21474836.48|21474836.47] "mA" Vector__XXX
+ SG_ Flag_IsBalancing : 24|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Flag_Precharge : 16|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 265 Batt_Param_1: 8 Vector__XXX
+ SG_ FFC : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_Status : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Total_Voltage : 48|16@1+ (0.1,0) [0|6553.5] "V" Vector__XXX
+ SG_ SoH : 16|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
+ SG_ SoC : 0|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
+
+BO_ 263 Charger_Info: 8 Vector__XXX
+ SG_ Charger_Voltage : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
+ SG_ Charger_Current : 23|16@0+ (0.1,0) [0|6553.5] "A" Vector__XXX
+ SG_ Charging_State : 39|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 614 ERR_DateValidation: 1 Vector__XXX
+ SG_ DateValidation : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 613 ERR_PDUOverTemperature: 1 Vector__XXX
+ SG_ PDUOverTemperature : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 612 ERR_PDUFailure: 1 Vector__XXX
+ SG_ PDUFailure : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 611 ERR_OpenConnection: 1 Vector__XXX
+ SG_ OpenConnection : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 610 ERR_JsonParseError: 1 Vector__XXX
+ SG_ JsonParseError : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 609 ERR_CurrentOutdated: 1 Vector__XXX
+ SG_ CurrentOutdated : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 608 ERR_BoardValuesOutdated: 1 Vector__XXX
+ SG_ BoardValuesOutdated : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 607 ERR_BMSDataOutdated: 1 Vector__XXX
+ SG_ BMSDataOutdated : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 606 ERR_ShortCircuit: 1 Vector__XXX
+ SG_ ShortCircuit : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 605 ERR_Overload: 1 Vector__XXX
+ SG_ Overload : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 604 ERR_OverTemperature: 1 Vector__XXX
+ SG_ OverTemperature : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 603 ERR_UnderVoltage: 1 Vector__XXX
+ SG_ UnderVoltage : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 602 ERR_OverVoltage: 1 Vector__XXX
+ SG_ OverVoltage : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
+
+
