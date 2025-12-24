@@ -102,7 +102,7 @@ BO_ 275 Cell_Voltage_Info_1: 8 Vector__XXX
  SG_ Cell_Voltage_1 : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
 
 BO_ 272 Batt_Param_2: 8 Vector__XXX
- SG_ Pack_Current : 32|32@1- (0.01,0) [-21474836.48|21474836.47] "mA" Vector__XXX
+ SG_ Pack_Current             : 32|32@1- (1e-005,0) [-21474.8|21474.8] "A" Vector__XXX
  SG_ Flag_IsBalancing : 24|8@1+ (1,0) [0|1] "" Vector__XXX
  SG_ Flag_Precharge : 16|8@1+ (1,0) [0|1] "" Vector__XXX
 
@@ -156,6 +156,7 @@ BO_ 603 ERR_UnderVoltage: 1 Vector__XXX
 
 BO_ 602 ERR_OverVoltage: 1 Vector__XXX
  SG_ OverVoltage : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+
 
 
 
