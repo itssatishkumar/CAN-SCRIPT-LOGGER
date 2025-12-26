@@ -87,12 +87,12 @@ BO_ 275 Cell_Voltage_Info_1: 8 Vector__XXX
 // TX3 / CAN ID 0x112 / 274
 // =====================================================
 BO_ 274 Temp_and_Capacity_Info: 8 Vector__XXX
- SG_ Temperature_1  : 0|8@1+  (1,0) [0|40] "degC" Vector__XXX
- SG_ Temperature_2  : 8|8@1+  (1,0) [0|40] "degC" Vector__XXX
- SG_ Temperature_3  : 16|8@1+ (1,0) [0|40] "degC" Vector__XXX
- SG_ Temperature_4  : 24|8@1+ (1,0) [0|40] "degC" Vector__XXX
- SG_ Temperature_5  : 32|8@1+ (1,0) [0|40] "degC" Vector__XXX
- SG_ Temperature_6  : 40|8@1+ (1,0) [0|40] "degC" Vector__XXX
+ SG_ Temperature_1  : 0|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Temperature_2  : 8|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Temperature_3  : 16|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Temperature_4  : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Temperature_5  : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
+ SG_ Temperature_6  : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
  SG_ Remaining_PCap : 48|16@1+ (0.1,0) [0|180] "Ah" Vector__XXX
 
 
