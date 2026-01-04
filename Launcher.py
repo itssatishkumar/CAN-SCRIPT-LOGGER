@@ -1,13 +1,3 @@
-#!/usr/bin/env python3
-"""
-Professional CAN Logger launcher with circular spinner and Cancel button.
-
-- Launches pcan_logger.py as subprocess.
-- Keeps splash visible until the main GUI window for that process appears (Windows),
-  or (fallback) until the process is running and a small stabilization delay passes.
-- Cancel button kills the launched process and closes splash immediately.
-"""
-
 import sys
 import os
 import subprocess
@@ -127,7 +117,7 @@ class SplashWindow(QWidget):
         layout.setAlignment(Qt.AlignCenter)
 
         # Header: Yellow strip w/ red text
-        header = QLabel("CAN LOGGER v1.0.25")
+        header = QLabel("CAN LOGGER v1.0.26")
         header.setFixedHeight(64)
         header.setAlignment(Qt.AlignCenter)
         header.setStyleSheet("""
