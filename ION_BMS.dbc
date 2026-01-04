@@ -55,13 +55,13 @@ BO_ 264 Public_Charger_Requirement_Limit: 8 Vector__XXX
 
 BO_ 290 Temperature_Info_2: 4 Vector__XXX
  SG_ Available_Discharge_Energy : 16|16@1+ (1,0) [0|65535] "Wh" Vector__XXX
- SG_ Thermistor_5 : 0|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+ SG_ Thermistor_5 : 0|16@1+ (0.1,0) [-128.0|127.0] "degC" Vector__XXX
 
 BO_ 274 Temperature_Info_1: 8 Vector__XXX
- SG_ Thermistor_4 : 48|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
- SG_ Thermistor_3 : 32|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
- SG_ Thermistor_2 : 16|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
- SG_ Thermistor_1 : 0|16@1+ (0.1,0) [0|6553.5] "C" Vector__XXX
+ SG_ Thermistor_4 : 48|16@1+ (0.1,0) [-128.0|127.0] "degC" Vector__XXX
+ SG_ Thermistor_3 : 32|16@1+ (0.1,0) [-128.0|127.0] "degC" Vector__XXX
+ SG_ Thermistor_2 : 16|16@1+ (0.1,0) [-128.0|127.0] "degC" Vector__XXX
+ SG_ Thermistor_1 : 0|16@1+ (0.1,0) [-128.0|127.0] "degC" Vector__XXX
 
 BO_ 298 Batt_param_3: 7 Vector__XXX
  SG_ Config_Version : 48|8@1+ (1,0) [0|255] "" Vector__XXX
@@ -176,3 +176,4 @@ BO_ 2566869221 Charger_Output: 8 Vector__XXX
  SG_ OBC_VCC_OUTPUT_FAILURE : 37|1@0- (1,0) [0|1] "" Vector__XXX
  SG_ OBC_FAN_FAULT : 38|1@0- (1,0) [0|1] "" Vector__XXX
  SG_ OBC_TOO_HIGH_BATT_VOLTAGE : 39|1@0- (1,0) [0|1] "" Vector__XXX
+
