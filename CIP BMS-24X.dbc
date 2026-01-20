@@ -203,3 +203,37 @@ BO_ 1542 AuxVoltage: 8 Vector__XXX
 BO_ 1538 Vehicle_State: 8 Vector__XXX
  SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 VAL_ 1538 VehicleState           0 "Off" 1 "Charge" 2 "Drive" 3 "Full Charge" ;
+
+BO_ 2550588916 VCU_Charge_Request: 8 Vector__XXX
+ SG_ VCU_Voltage_Request : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
+ SG_ VCU_Current_Request : 23|16@0+ (0.1,0) [0|6553.5] "A" Vector__XXX
+ SG_ VCU_Charge_Control  : 39|8@0+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 2566869221 Charger_Output: 8 Vector__XXX
+ SG_ OBC_Input_Iac : 63|8@0+ (0.1,0) [0|25.5] "A" Vector__XXX
+ SG_ OBC_Input_Vac : 55|8@0+ (2,0) [0|510] "V" Vector__XXX
+ SG_ OBC_TEMPERATURE : 47|8@0+ (1,-100) [-100|155] "°C" Vector__XXX
+ SG_ OBC_Output_Voltage : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
+ SG_ OBC_Output_Current : 23|16@0+ (0.1,0) [0|6553.5] "A" Vector__XXX
+ SG_ OBC_HW_FAIL : 32|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_OVER_TEMP_PROTECTION : 33|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_AC_OVERVOLT_PROTECTION : 34|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_BATTERY_REVERSE_PROTECTION : 35|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_COMMUNICATION_TIMEOUT_FAILURE : 36|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_VCC_OUTPUT_FAILURE : 37|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_FAN_FAULT : 38|1@0- (1,0) [0|1] "" Vector__XXX
+ SG_ OBC_TOO_HIGH_BATT_VOLTAGE : 39|1@0- (1,0) [0|1] "" Vector__XXX
+
+BO_ 1813 MCU_CAP_RPM: 8 Vector__XXX
+ SG_ MCU_BATT_KSI : 40|8@1+ (1,0) [0|255] "V" Vector__XXX
+ SG_ MCU_CAP_Volt : 32|8@1+ (1,0) [0|255] "V" Vector__XXX
+
+BO_ 1798 MCU_ERROR: 8 Vector__XXX
+ SG_ MCU_SpeedLimit : 31|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_LowTemp : 30|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_UnderVolt : 29|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_OverVolt : 28|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_Motor_OverHeat : 27|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_Motor_OverLoad : 26|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_Motor_OverSpeed : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MCU_Encoder_Fault : 24|1@1+ (1,0) [0|1] "" Vector__XXX
