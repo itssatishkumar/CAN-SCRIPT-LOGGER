@@ -181,10 +181,6 @@ BO_ 606 Error_Code_5: 8 Vector__XXX
 BO_ 607 Error_Code_6: 8 Vector__XXX
  SG_ Error_Code_6 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
 
-BO_ 2550588916 VCU_Charge_Request: 8 Vector__XXX
- SG_ VCU_Voltage_Request : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
- SG_ VCU_Current_Request : 23|16@0+ (0.1,0) [0|6553.5] "A" Vector__XXX
- SG_ VCU_Charge_Control  : 39|8@0+ (1,0) [0|1] "" Vector__XXX
 
 
 
