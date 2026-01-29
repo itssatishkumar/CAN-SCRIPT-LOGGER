@@ -238,6 +238,4 @@ BO_ 1798 MCU_ERROR: 8 Vector__XXX
  SG_ MCU_Motor_OverSpeed : 25|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ MCU_Encoder_Fault : 24|1@1+ (1,0) [0|1] "" Vector__XXX
 
-BO_ 1571 GPIO_DCDC_OUT : 8 Vector__XXX 
- SG_ DCDC_OUT :10|1@1+ (1,0) [0|0] "" Vector__XXX
 
