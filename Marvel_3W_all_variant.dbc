@@ -396,13 +396,12 @@ BO_ 1542 AuxVoltage: 8 Vector__XXX
  SG_ AuxVoltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
 
 BO_ 1538 Vehicle_State: 8 Vector__XXX
+ SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
-
 VAL_ 1538 VehicleState           0 "Off" 1 "Charge" 2 "Drive" 3 "Full Charge" ;
 
 BO_ 1954 Short_Circuit_Detect: 8 Vector__XXX
  SG_ SCD_Flag : 56|8@1+ (1,0) [0|0] "" Vector__XXX
-
 VAL_ 1954 SCD_Fla  0 "NA" 1 "Active" ;
 
 BO_ 302 IR_PARAM_SoC_K_Factor: 8 Vector__XXX
@@ -415,11 +414,9 @@ BO_ 342 BC_Dynamic_inst: 8 Vector__XXX
  SG_ dynamicLimitOut_Inst : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ dynamicLimitIn_Inst : 0|16@1+ (0.1,0) [0|0] "" Vector__XXX
 
-
 BO_ 299 BF_CCM_CMU_Counter: 8 Vector__XXX
  SG_ cycleCount : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ mcu_counter : 16|16@1+ (1,0) [0|0] "" Vector__XXX
-
 
 BO_ 600 AB_Error_Codes: 8 Vector__XXX
  SG_ EEPROM_COMM_FAIL : 15|1@1+ (1,0) [0|0] "" Vector__XXX
@@ -508,3 +505,15 @@ BO_ 1026 ODO_TRIP: 8 Vector__XXX
 
 BO_ 1571 GPIO_DCDC_OUT : 8 Vector__XXX 
  SG_ DCDC_OUT :10|1@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1032 Aux: 8 Vector__XXX
+ SG_ Auxmode : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ AuxVoltage : 15|16@0+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ AuxErrorCode : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GpioStatus : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Sanity : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1776 Reset: 8 Vector__XXX
+ SG_ EcuId : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+
