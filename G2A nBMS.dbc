@@ -173,6 +173,25 @@ BO_ 606 Error_Code_5: 8 Vector__XXX
 BO_ 607 Error_Code_6: 8 Vector__XXX
  SG_ Error_Code_6 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
 
+BO_ 1032 Aux: 8 Vector__XXX
+ SG_ Auxmode : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ AuxVoltage : 15|16@0+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ AuxErrorCode : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GpioStatus : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Sanity : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1776 Reset: 8 Vector__XXX
+ SG_ EcuId : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1033 Odo: 8 Vector__XXX
+ SG_ odometer : 7|32@0+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ trip : 39|32@0+ (0.01,0) [0|0] "" Vector__XXX
+
+BO_ 1538 State: 8 Vector__XXX
+ SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+
 
 
 
