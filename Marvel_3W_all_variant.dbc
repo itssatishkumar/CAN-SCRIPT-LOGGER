@@ -393,7 +393,7 @@ BO_ 264 DG_Public_Charger: 8 Vector__XXX
  SG_ MaxAllowed_CV : 0|16@1+ (1,0) [0|0] "mV" Vector__XXX
 
 BO_ 1542 AuxVoltage: 8 Vector__XXX
- SG_ AuxVoltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
+ SG_ Aux_Voltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
 
 BO_ 1538 State: 8 Vector__XXX
  SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
