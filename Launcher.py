@@ -117,7 +117,7 @@ class SplashWindow(QWidget):
         layout.setAlignment(Qt.AlignCenter)
 
         # Header: Yellow strip w/ red text
-        header = QLabel("CAN LOGGER v1.0.28")
+        header = QLabel("CAN LOGGER v1.0.29")
         header.setFixedHeight(64)
         header.setAlignment(Qt.AlignCenter)
         header.setStyleSheet("""
