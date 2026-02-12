@@ -395,7 +395,7 @@ BO_ 264 DG_Public_Charger: 8 Vector__XXX
 BO_ 1542 AuxVoltage: 8 Vector__XXX
  SG_ AuxVoltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
 
-BO_ 1538 Vehicle_State: 8 Vector__XXX
+BO_ 1538 State: 8 Vector__XXX
  SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 VAL_ 1538 VehicleState           0 "Off" 1 "Charge" 2 "Drive" 3 "Full Charge" ;
@@ -503,14 +503,18 @@ BO_ 1026 ODO_TRIP: 8 Vector__XXX
  SG_ ODO  : 0|32@1+ (0.1,0) [0|429496729.5] "km" Vector__XXX
  SG_ TRIP : 32|32@1+ (0.1,0) [0|429496729.5] "km" Vector__XXX
 
+BO_ 1033 Odo: 8 Vector__XXX
+ SG_ odometer : 7|32@0+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ trip : 39|32@0+ (0.01,0) [0|0] "" Vector__XXX
+
 BO_ 1571 GPIO_DCDC_OUT : 8 Vector__XXX 
  SG_ DCDC_OUT :10|1@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1032 Aux: 8 Vector__XXX
  SG_ Auxmode : 0|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Aux_Voltage : 15|16@0+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ AuxVoltage : 15|16@0+ (0.01,0) [0|0] "" Vector__XXX
  SG_ AuxErrorCode : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ GpioStatus : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GpioStatus : 39|16@0+ (1,0) [0|0] "" Vector__XXX
  SG_ Sanity : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1776 Reset: 8 Vector__XXX
