@@ -508,7 +508,7 @@ BO_ 1033 Odo: 8 Vector__XXX
  SG_ trip : 39|32@0+ (0.01,0) [0|0] "" Vector__XXX
 
 BO_ 1571 GPIO_DCDC_OUT : 8 Vector__XXX 
- SG_ DCDC_OUT :10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ DCDC_OUT :7|1@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1776 Reset: 8 Vector__XXX
  SG_ EcuId : 0|8@1+ (1,0) [0|0] "" Vector__XXX
