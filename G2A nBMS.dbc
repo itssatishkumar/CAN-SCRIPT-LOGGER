@@ -31,7 +31,7 @@ BO_ 298 Battery_Parameters_4: 8 Vector__XXX
  SG_ DYN_LIM_I_IN : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
  SG_ DYN_LIM_I_OUT : 16|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
  SG_ FW_FullVersion : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
- SG_ Config_ID : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ConfigID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
 
 // TX16 / CAN ID 0x121 / 289
 BO_ 289 Cell_Voltage_Info_9: 8 Vector__XXX
@@ -173,14 +173,33 @@ BO_ 606 Error_Code_5: 8 Vector__XXX
 BO_ 607 Error_Code_6: 8 Vector__XXX
  SG_ Error_Code_6 : 55|16@0+ (1,0) [0|65535] "" Vector__XXX
 
-BO_ 1538 State: 8 Vector__XXX
- SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
- SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2550588916 VCU_Charge_Request: 8 Vector__XXX
  SG_ VCU_Voltage_Request : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
  SG_ VCU_Current_Request : 23|16@0+ (0.1,0) [0|6553.5] "A" Vector__XXX
  SG_ VCU_Charge_Control  : 39|8@0+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 257 VCU_CAN_Contactor_Request: 8 Vector__XXX
+ SG_ VCU_Load_Enable_Req        : 56|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Charge_Enable_Req      : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Main_Enable_Req        : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Balancing_Enable_Req   : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 1 BMS_CAN_Contactor_Response: 8 Vector__XXX
+ SG_ BMS_Load_Enable_Ack                 : 56|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Charge_Enable_Ack               : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Main_Contactor_Closed           : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Precharge_Complete              : 32|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Balancing_Enable_Ack            : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Load_Enable_Stop_Request_to_VCU : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 1542 AuxVoltage: 8 Vector__XXX
+ SG_ Aux_Voltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
+
+BO_ 1538 State: 8 Vector__XXX
+ SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+VAL_ 1538 VehicleState           0 "Off" 1 "Charge" 2 "Drive" 3 "Full Charge" 4 "Deep_Sleep" ;
+
 
 
 
