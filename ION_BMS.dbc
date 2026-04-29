@@ -188,6 +188,10 @@ VAL_ 2554393600 VCU_Ignition_Status 0 "Ignition OFF Command" 1 "Ignition ON Comm
 BO_ 1542 AuxVoltage: 8 Vector__XXX
  SG_ Aux_Voltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
 
+BO_ 1813 MCU_CAP_RPM: 8 Vector__XXX
+ SG_ MCU_BATT_KSI : 40|8@1+ (1,0) [0|255] "V" Vector__XXX
+ SG_ MCU_CAP_Volt : 32|8@1+ (1,0) [0|255] "V" Vector__XXX
+
 BO_ 1798 MCU_ERROR: 8 Vector__XXX
  SG_ MCU_SpeedLimit : 31|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ MCU_LowTemp : 30|1@1+ (1,0) [0|1] "" Vector__XXX
