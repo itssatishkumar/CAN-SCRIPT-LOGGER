@@ -108,10 +108,13 @@ BO_ 272 Batt_Param_2: 8 Vector__XXX
 
 BO_ 265 Batt_Param_1: 8 Vector__XXX
  SG_ FFC : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ BMS_Status : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_State : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Total_Voltage : 48|16@1+ (0.1,0) [0|6553.5] "V" Vector__XXX
  SG_ SoH : 16|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
  SG_ SoC : 0|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
+
+VAL_ 265 Flag_Fully_Charged  0 "False" 1 "True" ;
+VAL_ 265 BMS_State           0 "INIT" 1 "Ready" 2 "Precharge" 3 "Active" 4 "Error" ;
 
 BO_ 263 Charger_Info: 8 Vector__XXX
  SG_ Charger_Voltage : 7|16@0+ (0.1,0) [0|6553.5] "V" Vector__XXX
