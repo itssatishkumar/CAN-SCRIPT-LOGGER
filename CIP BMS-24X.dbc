@@ -15,12 +15,15 @@ BO_ 272 Battery_Parameters_2: 8 Vector__XXX
 // =====================================================
 // TX2 / CAN ID 0x109 / 265
 // =====================================================
-BO_ 265 Battery_Parameters_1: 8 Vector__XXX
- SG_ SoC                 : 0|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
- SG_ SoH                 : 16|16@1+ (0.01,0) [0|655.35] "%" Vector__XXX
- SG_ BMS_State           : 32|8@1+ (1,0) [0|255] "" Vector__XXX
- SG_ Flags_Fully_Charged : 40|8@1+ (1,0) [0|255] "" Vector__XXX
- SG_ Total_Pack_Voltage  : 48|16@1+ (0.1,0) [0|6553.5] "V" Vector__XXX
+BO_ 265 AA_Batt_Param_2: 8 Vector__XXX
+ SG_ Pack_Voltage : 48|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ Flag_Fully_Charged : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ BMS_State : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ SoH : 16|16@1+ (0.01,0) [0|0] "%" Vector__XXX
+ SG_ SoC : 0|16@1+ (0.01,0) [0|0] "%" Vector__XXX
+
+VAL_ 265 Flag_Fully_Charged  0 "False" 1 "True" ;
+VAL_ 265 BMS_State           0 "INIT" 1 "Ready" 2 "Precharge" 3 "Active" 4 "Error" ;
 
 // =====================================================
 // TX3 / CAN ID 0x112 / 274
