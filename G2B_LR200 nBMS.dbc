@@ -204,6 +204,12 @@ BO_ 2566869221 Charger_Output: 8 Vector__XXX
  SG_ OBC_FAN_FAULT : 38|1@0- (1,0) [0|1] "" Vector__XXX
  SG_ OBC_TOO_HIGH_BATT_VOLTAGE : 39|1@0- (1,0) [0|1] "" Vector__XXX
 
+BO_ 2349443056 MCU_VCU_C09A7F0: 8 Vector__XXX
+ SG_ MCU_nMotorTemp : 56|8@1+ (1,-40) [0|0] "¡ãC" Vector__XXX
+ SG_ MCU_nControllerTemp : 48|8@1+ (1,-40) [0|0] "¡ãC" Vector__XXX
+ SG_ MCU_nAvailI : 32|16@1+ (0.1,0) [0|0] "A" Vector__XXX
+ SG_ MCU_AC_Voltage : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ MCU_DC_Voltage : 0|16@1+ (0.1,0) [0|0] "V" Vector__XXX
 
 
 
