@@ -2,7 +2,7 @@
 import os
 import time
 
-MAX_LOG_SIZE_MB = 60  # Maximum file size in megabytes
+MAX_LOG_SIZE_MB = 600  # Maximum file size in megabytes
 
 TRC_HEADER_TEMPLATE = (
     ";$FILEVERSION=1.1\n"
