@@ -218,5 +218,13 @@ BO_ 1 BMS_CAN_Contactor_Response: 8 Vector__XXX
  SG_ BMS_Load_Enable_Stop_Request_to_VCU : 16|1@1+ (1,0) [0|1] "" Vector__XXX
 
 
+BO_ 1542 AuxVoltage: 8 Vector__XXX
+ SG_ Aux_Voltage : 15|16@0+ (0.01,0) [0|655.35] "V" Vector__XXX
+
+BO_ 1538 State: 8 Vector__XXX
+ SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+VAL_ 1538 VehicleState           0 "Off" 1 "Charge" 2 "Drive" 3 "Full Charge" 4 "Deep_Sleep" ;
+
 
 
