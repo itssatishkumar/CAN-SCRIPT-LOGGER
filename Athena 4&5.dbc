@@ -134,6 +134,8 @@ BO_ 265 Battery_Parameters_1: 8 Vector__XXX
  SG_ BMS_State             : 32|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ Flags_Fully_Charged   : 40|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ Total_Pack_Voltage    : 48|16@1+ (0.1,0) [0|6553.5] "V" Vector__XXX
+VAL_ 265 Flag_Fully_Charged  0 "False" 1 "True" ;
+VAL_ 265 BMS_State           0 "INIT" 1 "Ready" 2 "Precharge" 3 "Active" 4 "Error" ;
 
 // TX12 / CAN ID 0x108 / 264
 BO_ 264 Public_Charger_Requirement_Limit: 8 Vector__XXX
@@ -214,6 +216,7 @@ BO_ 1 BMS_CAN_Contactor_Response: 8 Vector__XXX
  SG_ BMS_Precharge_Complete              : 32|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ BMS_Balancing_Enable_Ack            : 24|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ BMS_Load_Enable_Stop_Request_to_VCU : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+
 
 
 
