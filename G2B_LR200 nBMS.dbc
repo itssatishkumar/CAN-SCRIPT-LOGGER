@@ -163,6 +163,20 @@ BO_ 292 Cell_Voltage_Info_12: 8 Vector__XXX
  SG_ V_Max_ID_CMU         : 48|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ V_Max_Cell_Number    : 56|8@1+ (1,0) [0|255] "" Vector__XXX
 
+BO_ 257 VCU_CAN_Contactor_Request: 8 Vector__XXX
+ SG_ VCU_Load_Enable_Req        : 56|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Charge_Enable_Req      : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Main_Enable_Req        : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Balancing_Enable_Req   : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 1 BMS_CAN_Contactor_Response: 8 Vector__XXX
+ SG_ BMS_Load_Enable_Ack                 : 56|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Charge_Enable_Ack               : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Main_Contactor_Closed           : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Precharge_Complete              : 32|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Balancing_Enable_Ack            : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BMS_Load_Enable_Stop_Request_to_VCU : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+
 BO_ 600 Active_Error: 8 Vector__XXX
  SG_ Active_error_Count : 40|16@1+ (1,0) [0|65535] "" Vector__XXX
 
