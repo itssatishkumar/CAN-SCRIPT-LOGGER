@@ -218,6 +218,67 @@ BO_ 2566869221 Charger_Output: 8 Vector__XXX
  SG_ OBC_FAN_FAULT : 38|1@0- (1,0) [0|1] "" Vector__XXX
  SG_ OBC_TOO_HIGH_BATT_VOLTAGE : 39|1@0- (1,0) [0|1] "" Vector__XXX
 
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ MCU_F_RESERVE : 0|2@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1798 MCU_VCU_706: 1 Vector__XXX
+ SG_ Regeneration_Active : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1830 MCU_VCU_726: 8 Vector__XXX
+ SG_ Firmware_Version : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Configuration_Version : 0|32@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1829 MCU_VCU_725: 2 Vector__XXX
+ SG_ Inputs_Brake_Pot : 8|8@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ Inputs_Brake_Command : 0|8@1+ (1,0) [0|0] "%" Vector__XXX
+
+BO_ 2349508592 MCU_VCU_C0AA7F0: 8 Vector__XXX
+ SG_ MCU_N_FaultNUM : 56|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_N_FaultGrade : 52|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE9 : 50|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_IGBT_HOC_WARNING : 49|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_ACC_UV_WARNING : 48|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE8 : 47|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_MOTOR_TEMP_SENSOR : 46|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_IGBT_TEMP_SENSOR : 45|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_H_W_OC : 44|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_H_V_OC : 43|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_H_U_OC : 42|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE7 : 41|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_W_DOWN_IGBT : 40|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_W_UP_IGBT : 39|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_V_DOWN_IGBT : 38|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_V_UP_IGBT : 37|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_U_DOWN_IGBT : 36|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_U_UP_IGBT : 35|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE6 : 31|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_MOTOR_OT_H : 30|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_MOTOR_OT_L : 29|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE5 : 25|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_IGBT_OT_H : 24|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_IGBT_OT_L : 23|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_CAN_OFFLINE : 22|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_SPEED_OV : 21|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE4 : 19|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_CONTROL_OL_H : 18|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_CONTROL_OL_L : 17|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_BUS_OV_H : 16|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_BUS_OV_L : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_BUS_UV_H : 14|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_BUS_UV_L : 13|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_S_OC : 12|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_ACC_UV : 11|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_GUN_SELF : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE3 : 8|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_CURRENT_DETECT : 7|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_LACK_PHASE : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_ENCORDE : 5|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE2 : 4|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_H_OV : 3|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_RESERVE1 : 2|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_H_OC : 1|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_F_IGBT : 0|1@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2349443056 MCU_VCU_C09A7F0: 8 Vector__XXX
  SG_ MCU_nMotorTemp : 56|8@1+ (1,-40) [0|0] "¡ãC" Vector__XXX
  SG_ MCU_nControllerTemp : 48|8@1+ (1,-40) [0|0] "¡ãC" Vector__XXX
@@ -225,5 +286,45 @@ BO_ 2349443056 MCU_VCU_C09A7F0: 8 Vector__XXX
  SG_ MCU_AC_Voltage : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
  SG_ MCU_DC_Voltage : 0|16@1+ (0.1,0) [0|0] "V" Vector__XXX
 
+BO_ 2349377520 MCU_VCU_C08A7F0: 8 Vector__XXX
+ SG_ MCU_ContactorStatus_Main : 57|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_Canlife : 60|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_Gear : 58|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_ContactorStatus_Precharge : 56|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_PWM : 55|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_control_mode : 54|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_ready : 53|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_fault : 52|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_brake_drive : 51|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_direction : 50|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_discharge : 49|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_WorkStatus_halt : 48|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MCU_nCurrent : 32|16@1+ (0.1,-3200) [0|0] "A" Vector__XXX
+ SG_ MCU_SpdEst : 16|16@1+ (1,-32000) [0|0] "rpm" Vector__XXX
+ SG_ MCU_TrqEst : 0|16@1+ (0.1,-3200) [0|0] "Nm" Vector__XXX
+
+BO_ 2349330599 VCU_MCU_C07F0A7: 6 Vector__XXX
+ SG_ VCU_Canlife : 60|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_HVCircuit : 42|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_Discharge : 41|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_Enable : 40|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_ModeReq_control_mode : 37|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_ModeReq_reverse : 36|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_ModeReq_brake : 35|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_ModeReq_forward : 34|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_ModeReq_idle : 33|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_ModeReq_halt : 32|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ VCU_SpdReq : 16|16@1+ (1,-32000) [0|0] "rpm" Vector__XXX
+ SG_ VCU_TrqReq : 0|16@1+ (0.1,-3200) [0|0] "Nm" Vector__XXX
+
+BO_ 265 BMS_MCU_109: 2 Vector__XXX
+ SG_ BMS_Soc : 0|16@1+ (0.01,0) [0|0] "%" Vector__XXX
+
+BO_ 272 BMS_MCU_110: 4 Vector__XXX
+ SG_ BMS_Pack_Current : 32|32@1- (1E-005,0) [0|0] "A" Vector__XXX
+
+BO_ 298 BMS_MCU_12A: 4 Vector__XXX
+ SG_ BMS_DC_Disharge_Request : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
+ SG_ BMS_DC_Charge_Request : 0|16@1+ (0.1,0) [0|0] "A" Vector__XXX
 
 
