@@ -156,7 +156,7 @@ BO_ 263 Charger_Info: 8 Vector__XXX
 
 // TX19 / CAN ID 0x124 / 292
 BO_ 292 Cell_Voltage_Info_12: 8 Vector__XXX
- SG_ CMU_10_CV2   : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
+ SG_ Vmin_Theshold   : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
  SG_ CMU_10_CV_4  : 16|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
  SG_ V_Min_ID_CMU         : 32|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ V_Min_Cell_Number    : 40|8@1+ (1,0) [0|255] "" Vector__XXX
