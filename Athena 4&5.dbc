@@ -206,7 +206,7 @@ BO_ 2566869221 Charger_Output: 8 Vector__XXX
 BO_ 257 VCU_CAN_Contactor_Request: 8 Vector__XXX
  SG_ VCU_Load_Enable_Req        : 56|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ VCU_Charge_Enable_Req      : 48|1@1+ (1,0) [0|1] "" Vector__XXX
- SG_ VCU_Main_Enable_Req        : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_Main_Enable_Req        : 32|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ VCU_Balancing_Enable_Req   : 24|1@1+ (1,0) [0|1] "" Vector__XXX
 
 BO_ 1 BMS_CAN_Contactor_Response: 8 Vector__XXX
@@ -225,6 +225,5 @@ BO_ 1538 State: 8 Vector__XXX
  SG_ gunConnected : 48|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ VehicleState : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 VAL_ 1538 VehicleState           0 "Off" 1 "Charge" 2 "Drive" 3 "Full Charge" 4 "Deep_Sleep" ;
-
 
 
