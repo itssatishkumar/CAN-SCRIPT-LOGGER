@@ -128,7 +128,6 @@ BO_ 272 Battery_Parameters_2: 8 Vector__XXX
  SG_ Balancing_Limit : 0|16@1+ (0.1,0) [0|6553.5] "mV" Vector__XXX
 
 // TX2 / CAN ID 0x109 / 265
-
 BO_ 265 AA_Batt_Param_2: 8 Vector__XXX
  SG_ Pack_Voltage : 48|16@1+ (0.1,0) [0|0] "V" Vector__XXX
  SG_ Flag_Fully_Charged : 40|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -316,15 +315,4 @@ BO_ 2349330599 VCU_MCU_C07F0A7: 6 Vector__XXX
  SG_ VCU_ModeReq_halt : 32|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ VCU_SpdReq : 16|16@1+ (1,-32000) [0|0] "rpm" Vector__XXX
  SG_ VCU_TrqReq : 0|16@1+ (0.1,-3200) [0|0] "Nm" Vector__XXX
-
-BO_ 265 BMS_MCU_109: 2 Vector__XXX
- SG_ BMS_Soc : 0|16@1+ (0.01,0) [0|0] "%" Vector__XXX
-
-BO_ 272 BMS_MCU_110: 4 Vector__XXX
- SG_ BMS_Pack_Current : 32|32@1- (1E-005,0) [0|0] "A" Vector__XXX
-
-BO_ 298 BMS_MCU_12A: 4 Vector__XXX
- SG_ BMS_DC_Disharge_Request : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
- SG_ BMS_DC_Charge_Request : 0|16@1+ (0.1,0) [0|0] "A" Vector__XXX
-
 
