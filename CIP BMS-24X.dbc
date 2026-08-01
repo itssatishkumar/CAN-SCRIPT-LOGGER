@@ -245,6 +245,8 @@ BO_ 1798 MCU_ERROR: 8 Vector__XXX
 BO_ 1571 GPIO_DCDC_OUT : 8 Vector__XXX 
  SG_ DCDC_OUT :10|1@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 1025 Display_SoC : 8 Vector__XXX 
+ SG_ Display_SoC : 8|8@1+ (1,0) [0|0] "%" Vector__XXX
 
 
 
