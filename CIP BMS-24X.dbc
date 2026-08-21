@@ -35,7 +35,7 @@ BO_ 274 Temp_and_Capacity_Info: 8 Vector__XXX
  SG_ Temperature_4  : 24|8@1- (1,0) [-128|127] "degC" Vector__XXX
  SG_ Temperature_5  : 32|8@1- (1,0) [-128|127] "degC" Vector__XXX
  SG_ Temperature_6  : 40|8@1- (1,0) [-128|127] "degC" Vector__XXX
- SG_ Remaining_PCap : 48|16@1+ (0.1,0) [0|6553.5] "Ah" Vector__XXX
+ SG_ Remaining_PCap : 48|16@1+ (0.01,0) [0|6553.5] "Ah" Vector__XXX
 
 // =====================================================
 // TX4 / CAN ID 0x113 / 275
