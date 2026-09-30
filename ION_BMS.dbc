@@ -53,9 +53,8 @@ BO_ 264 Public_Charger_Requirement_Limit: 8 Vector__XXX
  SG_ Max_Allowed_Pack_Volatge : 16|16@1+ (1,0) [0|65535] "V" Vector__XXX
  SG_ Max_Cell_Voltage : 0|16@1+ (1,0) [0|65535] "mV" Vector__XXX
 
-
 BO_ 2566848976 Voltage_Info: 8 Vector__XXX
- SG_ Vmin : 16|16@1+ (1,0) [0|65535] "mV" Vector__XXX
+ SG_ Min_Cell_Voltage : 16|16@1+ (1,0) [0|65535] "mV" Vector__XXX
 
 BO_ 290 Temperature_Info_2: 4 Vector__XXX
  SG_ Available_Discharge_Energy : 16|16@1+ (1,0) [0|65535] "Wh" Vector__XXX
